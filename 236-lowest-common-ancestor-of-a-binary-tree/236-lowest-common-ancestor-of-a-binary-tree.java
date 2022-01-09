@@ -9,41 +9,27 @@
  */
 class Solution {
 
-  List<TreeNode> pTrace = new ArrayList<>();
   List<TreeNode> qTrace = new ArrayList<>();
-  Set<Integer> pTrace2 = new HashSet<>();
+  Set<Integer> pTraceSet = new HashSet<>();
 
   public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-
-    if(root == null) return null;
     List<TreeNode> trace = new ArrayList<>();
-
+    TreeNode commonAncestor = null;
     trace.add(root);
     dfs(root, p, q, trace);
-
-
-//    for(int i = 0; i< pTrace.size(); i++) {
-//      System.out.println("ptrace is " + pTrace.get(i));
-//    }
-//
-//    for(int j = 0; j < qTrace.size(); j++) {
-//      System.out.println("qTrace is " + qTrace.get(j));
-//    }
-
     for(int k = qTrace.size()-1; k>=0; k--) {
-      if(pTrace2.contains(qTrace.get(k).val)) {
-        return qTrace.get(k);
+      if(pTraceSet.contains(qTrace.get(k).val)) {
+        commonAncestor = qTrace.get(k); break;
       }
     }
-    return null;
+    return commonAncestor;
   }
 
   private void dfs(TreeNode currNode, TreeNode p, TreeNode q, List<TreeNode> trace) {
-
-    if(currNode.val == p.val) {
-      pTrace = List.copyOf(trace);
-      for(TreeNode ancestorq : trace) {
-        pTrace2.add(ancestorq.val);
+    if(!qTrace.isEmpty() && !pTraceSet.isEmpty()) return;
+    else if(currNode.val == p.val) {
+      for(TreeNode node : trace) {
+        pTraceSet.add(node.val);
       }
     }
     else if(currNode.val == q.val) {
