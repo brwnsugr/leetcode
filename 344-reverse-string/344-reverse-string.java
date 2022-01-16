@@ -1,11 +1,9 @@
 class Solution {
     public void reverseString(char[] s) {
-        int len = s.length;
-        for(int i = 0; i < len/2; i++) {
-            int complement = len - i - 1;
+        for(int i = 0; i < s.length/2; i++) {
             char temp = s[i];
-            s[i] = s[complement];
-            s[complement] = temp;
+            s[i] = s[s.length - i - 1];
+            s[s.length - i - 1] = temp;
         }
     }
 }
