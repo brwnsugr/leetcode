@@ -16,7 +16,9 @@ class Solution {
     else {
       int points = questions[currIdx][0];
       int steps = questions[currIdx][1];
-      cache[currIdx] = Math.max(dfs(questions, currIdx+1), points + dfs(questions, currIdx + 1 + steps));
+      long skippingCurrent = dfs(questions, currIdx +1);
+      long checkCurrent = points + dfs(questions, currIdx + steps + 1);
+      cache[currIdx] = Math.max(skippingCurrent, checkCurrent);
       return cache[currIdx];
     }
   }
