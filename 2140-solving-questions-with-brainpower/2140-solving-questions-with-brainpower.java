@@ -18,8 +18,7 @@ class Solution {
       int steps = questions[currIdx][1];
       long skippingCurrent = dfs(questions, currIdx +1);
       long checkCurrent = points + dfs(questions, currIdx + steps + 1);
-      cache[currIdx] = Math.max(skippingCurrent, checkCurrent);
-      return cache[currIdx];
+      return cache[currIdx] = Math.max(skippingCurrent, checkCurrent);
     }
   }
 }
