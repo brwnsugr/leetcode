@@ -16,11 +16,8 @@ class Solution {
      * list node :  1->3-5,  new arraylist : 1,3,5  -> iterate the new arrayslist in reverse (5->3->1) 
      * 
      */
-    if(head == null) return null;
-    if(head.next == null) return head;
+    if(head == null || head.next == null) return head;
     List<Integer> arr = new ArrayList<>();
-    
-//    ListNode curr = head;
     
     while(head != null) {
       arr.add(head.val);
