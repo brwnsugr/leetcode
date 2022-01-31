@@ -33,17 +33,12 @@ class Solution {
      *
      */
 
-    int remain = num;
     String ans = "";
 
     for(int i = WORD_DICT.size()-1; i >= 0; i--) {
-      if(WORD_DICT.get(i).val <= remain) {
-        int count = remain / WORD_DICT.get(i).val;
-        while(count > 0) {
-          ans += WORD_DICT.get(i).word;
-          remain -= WORD_DICT.get(i).val;
-          count--;
-        }
+      while(num - WORD_DICT.get(i).val >= 0) {
+        num -= WORD_DICT.get(i).val;
+        ans += WORD_DICT.get(i).word;
       }
     }
     return ans;
