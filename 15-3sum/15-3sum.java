@@ -3,24 +3,29 @@ class Solution {
 
   public List<List<Integer>> threeSum(int[] nums) {
     Arrays.sort(nums);
-    for(int i = 0; i < nums.length; i++) {
+    for(int i = 0; i < nums.length -2; i++) {
       if(nums[i] > 0) break;
-      if(i == 0 || nums[i-1] != nums[i]) {
-        addPossibleSum(nums, i);
-      }
+      if(i == 0 || nums[i-1] != nums[i]) addThreeSum(nums, i);
     }
     return res;
   }
 
-  private void addPossibleSum(int[] nums, int i) {
-    Set<Integer> s = new HashSet<>();
-    for(int j = i+1; j < nums.length; j++) {
-      int complement = -nums[j] - nums[i];
-      if(s.contains(complement)) {
-        res.add(Arrays.asList(nums[i], complement, nums[j]));
-        while(j + 1 < nums.length && nums[j] == nums[j+1]) j++;
+  private void addThreeSum(int[] nums, int i) {
+    int lo = i + 1;
+    int hi = nums.length-1;
+    while(lo < hi) {
+      int sum = nums[lo] + nums[hi] + nums[i];
+      if(sum < 0) {
+        lo++;
       }
-      s.add(nums[j]);
+      else if(sum > 0) {
+        hi--;
+      }
+      else {
+        res.add(Arrays.asList(nums[i], nums[lo], nums[hi]));
+        lo++; hi--;
+        while(lo < hi && nums[lo] == nums[lo-1]) lo++;
+      }
     }
   }
 }
