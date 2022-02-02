@@ -19,9 +19,14 @@ class Solution {
 
     Stack<Character> stack = new Stack<>();
 
+    Set<Character> openBrackets = new HashSet<>();
+    openBrackets.add('('); openBrackets.add('{'); openBrackets.add('[');
+    Set<Character> closeBrackets = new HashSet<>();
+    closeBrackets.add(')'); closeBrackets.add('}'); closeBrackets.add(']');
+    
     for(char c : s.toCharArray()) {
-      if(c == '(' || c== '{' || c == '[') stack.add(c);
-      else if((c == ')' || c=='}' || c==']') && !stack.isEmpty()) {
+      if(openBrackets.contains(c)) stack.add(c);
+      else if(closeBrackets.contains(c) && !stack.isEmpty()) {
         char open = stack.peek();
         if((c == ')' && open=='(') || (c=='}' && open=='{') || (c==']' && open=='[')) stack.pop();
         else return false;
