@@ -42,6 +42,6 @@ class Solution {
     }
     Node newNode = new Node(node.val);
     visitedHashMap.put(node, newNode);
-    return visitedHashMap.get(node);
+    return newNode;
   }
 }
