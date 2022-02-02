@@ -14,18 +14,34 @@ class Node {
 */
 
 class Solution {
-  private Map<Node, Node> visitedNodeMap = new HashMap<>();
+  private Map<Node, Node> visitedHashMap = new HashMap<>();
+
   public Node copyRandomList(Node head) {
     if(head == null) return null;
 
-    if(visitedNodeMap.containsKey(head)) return visitedNodeMap.get(head);
-
+    Node oldNode = head;
     Node newNode = new Node(head.val);
-    visitedNodeMap.put(head, newNode);
 
-    newNode.next = this.copyRandomList(head.next);
-    newNode.random = this.copyRandomList(head.random);
+    visitedHashMap.put(head, newNode);
 
-    return newNode;
+    while(oldNode != null) {
+
+      newNode.next = getCloneNode(oldNode.next);
+      newNode.random = getCloneNode(oldNode.random);
+
+      oldNode = oldNode.next;
+      newNode = newNode.next;
+    }
+    return visitedHashMap.get(head);
+  }
+
+  private Node getCloneNode(Node node) {
+    if(node == null) return null;
+    if(visitedHashMap.containsKey(node)) {
+      return visitedHashMap.get(node);
+    }
+    Node newNode = new Node(node.val);
+    visitedHashMap.put(node, newNode);
+    return visitedHashMap.get(node);
   }
 }
