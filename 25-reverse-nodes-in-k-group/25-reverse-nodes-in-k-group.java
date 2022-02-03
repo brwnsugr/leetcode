@@ -9,47 +9,37 @@
  * }
  */
 class Solution {
-   public ListNode reverseKGroup(ListNode head, int k) {
-
-    /**
-     * don't need to move the pointer. 
-     * Just Need to modify the node's value in Reverse Order by K size group
-     * 
-     * So, go through the linked list from head
-     * I would store the the K sized Group values in order when traverse
-     * 
-     * 1->2->3->4  k = 2,  1->2 {1,2}  
-     * 
-     */
-    if (head == null) return null;
+    public ListNode reverseKGroup(ListNode head, int k) {
     
-    
-    List<Integer> orders = new ArrayList<>();
-    int count = 0;
-    ListNode curr = head;
-    
-    ListNode start = null;
-    while(curr!=null) {
-      count++;
-      orders.add(curr.val);
-      if(count == 1) {
-        start = curr;
-      }
-      if(count == k) {
-        makeReverse(start, orders);
-        count = 0;
-        orders.clear();
-      }
-      curr = curr.next;
+        ListNode curr = head;
+        List<Integer> orders = new ArrayList<>();
+        
+        int count = 0;
+        ListNode start = null;
+        while(curr != null) {
+            count++;
+            orders.add(curr.val);
+            if(count == 1) {
+                start = curr;
+            }
+            if(count == k) {
+                reverseList(start, orders);
+                orders.clear();
+                count = 0;
+            }
+            curr = curr.next;
+        }
+        return head;
     }
-    return head;
-  }
-  
-  private void makeReverse(ListNode start, List<Integer> orders) {
-    if(start == null) return;
-    for(int i = orders.size() -1; i>=0; i--) {
-      start.val = orders.get(i);
-      start = start.next;
+    
+    
+    private void reverseList(ListNode start, List<Integer> orders) {
+        if(start == null) return;
+        for(int i = orders.size() -1 ; i>=0; i--) {
+            start.val = orders.get(i);
+            start = start.next;
+        }
     }
-  }
+    
+    
 }
