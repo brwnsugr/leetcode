@@ -14,34 +14,36 @@ class Node {
 */
 
 class Solution {
-  private Map<Node, Node> visitedHashMap = new HashMap<>();
-
-  public Node copyRandomList(Node head) {
-    if(head == null) return null;
-
-    Node oldNode = head;
-    Node newNode = new Node(head.val);
-
-    visitedHashMap.put(head, newNode);
-
-    while(oldNode != null) {
-
-      newNode.next = getCloneNode(oldNode.next);
-      newNode.random = getCloneNode(oldNode.random);
-
-      oldNode = oldNode.next;
-      newNode = newNode.next;
+    Map<Node, Node> visitedMap = new HashMap<>();
+    public Node copyRandomList(Node head) {
+        if(head == null) return null;
+        
+        Node oldNode = head;
+        Node newNode = new Node(head.val);
+        Node newHead = newNode;
+        visitedMap.put(head, newNode);
+        
+        while(oldNode != null) {
+            
+            newNode.next = GetClonedNode(oldNode.next);
+            newNode.random = GetClonedNode(oldNode.random);
+            
+            oldNode = oldNode.next;
+            newNode = newNode.next;
+        }
+        
+        return visitedMap.get(head);
     }
-    return visitedHashMap.get(head);
-  }
-
-  private Node getCloneNode(Node node) {
-    if(node == null) return null;
-    if(visitedHashMap.containsKey(node)) {
-      return visitedHashMap.get(node);
+    
+    
+    private Node GetClonedNode(Node node) {
+        if(node == null) return null;
+        else if(visitedMap.containsKey(node))  {
+            return visitedMap.get(node);
+        }
+        else {
+            visitedMap.put(node, new Node(node.val));
+            return visitedMap.get(node);
+        }
     }
-    Node newNode = new Node(node.val);
-    visitedHashMap.put(node, newNode);
-    return newNode;
-  }
 }
