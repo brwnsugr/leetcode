@@ -1,100 +1,100 @@
+import java.util.*;
+
 class Solution {
-  private static int[][] DIRECTIONS = new int[][]{
-      {1,0},{0,1},{-1,0},{0,-1}
-  };
+    
+    private static int[][] DIRECTIONS = {{1,0}, {0,1}, {-1,0}, {0,-1}};
+    
+    public int cutOffTree(List<List<Integer>> forest) {
+        
+        /*
+        We Sort all the trees by height and starting from the 0,0 I trying to get steps to reach each tree of height
+        In eachd we find the tree we aimed, the new start point would be the aimed tree
+        */
 
-  public int cutOffTree(List<List<Integer>> forest) {
-
-    /**
-     * Naive Approach: we try to sort by height of tree
-     * and try to cut off them in order and count the steps per each tree.
-     *
-     * e.g.
-     * [[1,1],
-     *  [1,1], 1st steps for cutting 1st tree: 3,
-     *  [0,1]] 2nd steps for 2nd tree: 2,
-     *  total steps = 3 + 2 = 5
-     *
-     *
-     *  Deep Dive To this approach
-     *
-     *  sort the trees with its position
-     *
-     *  and then, from the starting point(0,0)
-     *  we aim the first Element of trees in order from start.
-     *  after reaching to each tree, then we start from the position of that tree
-     *
-     *  what if we can't reach to any trees while looping?
-     *  -> just return -1, which equals it's impossible
-     *  cut off all cuz there's no other ways to reach.
-     *  k = number of cells
-     * TC: O(k^2) -> deque tree arrs in order (k), and BFS(k), SC: O(3k)
-     */
-    List<int[]> trees = getTrees(forest);
-    Collections.sort(trees, new Comparator<int[]>() {
-      @Override
-      public int compare(int[] t1, int[] t2) {
-        return t1[2] - t2[2];
-      }
-    });
-    int totalSteps = 0;
-    int startR = 0;
-    int startC = 0;
-
-    int numberOfTrees = trees.size();
-
-    while(!trees.isEmpty()) {
-      int[] treeAimed = trees.remove(0);
-      int aimR = treeAimed[0];
-      int aimC = treeAimed[1];
-      int steps = getSteps(forest, startR, startC, aimR, aimC);
-      if(steps == -1) return -1;
-      totalSteps += steps;
-      startR = aimR;
-      startC = aimC;
-    }
-    return totalSteps;
-  }
-
-  private int getSteps(List<List<Integer>> forest, int startR, int startC, int aimR, int aimC) {
-    int steps = 0;
-    int rows = forest.size();
-    int cols = forest.get(0).size();
-    boolean[][] visited = new boolean[rows][cols];
-    Queue<int[]> q = new LinkedList<>();
-    q.add(new int[]{startR, startC});
-    visited[startR][startC] = true;
-
-    while(!q.isEmpty()) {
-      int qSize = q.size();
-      for(int i = 0; i < qSize; i++) {
-        int[] curr = q.poll();
-        if(curr[0] == aimR && curr[1] == aimC) return steps;
-        for(int[] direction : DIRECTIONS) {
-          int nextR = curr[0] + direction[0];
-          int nextC = curr[1] + direction[1];
-          if(nextR >= 0 && nextR < rows
-              && nextC >= 0 && nextC < cols
-              && !visited[nextR][nextC]
-              && forest.get(nextR).get(nextC) > 0) {
-            visited[nextR][nextC] = true;
-            q.add(new int[]{nextR, nextC});
-          }
+        
+        /*
+        Basic implementation that I've come up with is 
+        1. sort the height and store in the linkedlist with its position
+        2. get steps in each starting point (0, 0)
+        
+        and each starting to reaching to the aim point,
+        I would use BFS to get steps because it's about to get the shortest possible distance between start and aim
+        N = Rows * Cols
+        TC: O(N) + O(NlogN) + O(N*N) = O(N*N), SC: O(3N) = O(N)
+        */
+        
+        List<int[]> trees = getTrees(forest);
+        Collections.sort(trees, new Comparator<int[]>(){
+           @Override
+           public int compare(int[] t1, int[] t2) {
+                return t1[2] - t2[2];
+           }
+        });
+        
+        int totalSteps = 0;
+        int startY = 0; int startX = 0;
+        
+        while(!trees.isEmpty()) {
+            int[] curr = trees.remove(0);
+            int aimY = curr[0]; int aimX = curr[1];
+            int steps = getSteps(forest, startY, startX, aimY, aimX);
+            if(steps == -1) return steps;
+            else totalSteps += steps;
+            startY = aimY;
+            startX = aimX;
         }
-      }
-      steps++;
+        return totalSteps;
     }
-    return -1;
-  }
-
-  private List<int[]> getTrees(List<List<Integer>> forest) {
-    List<int[]> res = new LinkedList<>();
-    for(int i = 0; i < forest.size(); i++) {
-      for(int j = 0; j < forest.get(0).size(); j++) {
-        int height = forest.get(i).get(j);
-        if(height > 1) res.add(new int[]{i,j,height});
-      }
+    
+    private int getSteps(List<List<Integer>> forest, int startY, int startX, int aimY, int aimX) {
+        int steps = 0;
+        int rows = forest.size();
+        int cols = forest.get(0).size();
+        boolean[][] visited = new boolean[rows][cols];
+        visited[startY][startX] = true;
+        boolean reachedAim = false;
+        
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{startY, startX});
+        
+        while(!q.isEmpty()) {
+            int qSize = q.size();
+            for(int i = 0; i < qSize; i++) {
+                int[] curr = q.poll();
+                if(curr[0] == aimY && curr[1] == aimX) {
+                    reachedAim = true;
+                    break;
+                }
+                
+                for(int[] direction : DIRECTIONS) {
+                    int nextY = curr[0] + direction[0];
+                    int nextX = curr[1] + direction[1];
+                    if(nextY >= 0 && nextY < rows 
+                       && nextX >= 0 && nextX < cols
+                       && forest.get(nextY).get(nextX) > 0
+                       && !visited[nextY][nextX]) {
+                        visited[nextY][nextX] = true;
+                        q.add(new int[]{nextY, nextX});
+                    }
+                }
+            }
+            if(reachedAim) return steps;
+            steps++;
+        }
+        return -1;
     }
-    return res;
-  }
+    
+    
+    
+    List<int[]> getTrees(List<List<Integer>> forest){
+        List<int[]> res = new LinkedList<>();
+        for(int i = 0; i < forest.size(); i++) {
+            for(int j = 0; j < forest.get(0).size(); j++) {
+                if(forest.get(i).get(j) > 1) {
+                    res.add(new int[]{i,j,forest.get(i).get(j)});
+                }
+            }
+        }
+        return res;
+    }
 }
