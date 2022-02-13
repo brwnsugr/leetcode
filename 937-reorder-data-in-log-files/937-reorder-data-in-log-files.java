@@ -23,18 +23,18 @@ class Solution {
         if(!isDigit1 && isDigit2) { // 1번이 먼저 오는 거는 return -1
           return -1;
         }
-        else if (!isDigit1 && !isDigit2) {
+        if (!isDigit1 && !isDigit2) {
           int cmp = split1[1].compareTo(split2[1]);
           if( cmp != 0) {
             return cmp;
           }
           return split1[0].compareTo(split2[0]);
         }
-        else if(isDigit1 && !isDigit2) { // 2 번이 먼저 오는거는 return 1
+        if(isDigit1 && !isDigit2) { // 2 번이 먼저 오는거는 return 1
           return 1;
-        } else { // both logs are digit log
+        } // both logs are digit log
           return 0;
-        }
+        
       }
     };
     return myComp;
