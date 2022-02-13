@@ -1,57 +1,78 @@
 class Solution {
     public List<List<String>> suggestedProducts(String[] products, String searchWord) {
-        
         /*
-        "m", "mo", ... , "mouse"
-        in every prefix, we try to find the prefix of word equals in the products which is sorted lexicographically.
-        
-        M : searchWord length, N: products length
-        TC: O(NlogN + MlogM) SC: O(M)
+        1. Create a trie from the given products input
+        2. 
+    
         */
+        Trie trie = new Trie();
         
-        /*
-        getSorted String array
-        */
-        Arrays.sort(products);
+        for(String product : products) {
+            trie.insert(product);
+        }
         
         String prefix = "";
-        
-        List<List<String>> answerSet = new ArrayList<>();
-        int bsStart = 0;
+        List<List<String>> answerList = new ArrayList<>();
         
         for(char c : searchWord.toCharArray()) {
             prefix += c;
-            
-            int start = getStartIdxOfPrefix(bsStart, prefix, products);
-            List<String> temp = new ArrayList<>();
-            
-            
-            for(int i = start; i < Math.min(start + 3, products.length); i++) {
-                if(products[i].startsWith(prefix)) {
-                    temp.add(products[i]);
-                } else break;
-            }
-            answerSet.add(temp);
-            bsStart = start;
+            answerList.add(trie.getWordStartingWith(prefix));
         }
-        return answerSet;
+        return answerList;
+    }
+    
+    
+}
+
+class Trie {
+    class Node {
+        boolean isWord = false;
+        List<Node> children = Arrays.asList(new Node[26]);
+    }
+    
+    Node root, curr;
+    List<String> resultBuffer;
+    
+    void dfsWithPrefix(Node curr, String word) {
+        if(resultBuffer.size() == 3) return;
+        if(curr.isWord) resultBuffer.add(word);
+        
+        for(char c = 'a'; c <= 'z'; c++) {
+            if(curr.children.get(c-'a') != null) {
+                dfsWithPrefix(curr.children.get(c-'a'), word + c);
+            }
+        }
+    }
+    
+    Trie() {
+        root = new Node();
         
     }
     
-    
-    public int getStartIdxOfPrefix(int bsStart, String prefix, String[] products){
-        int i = bsStart;
-        int j = products.length;
-        while(i < j) {
-            int mid = (i + j) / 2;
-            System.out.println("mid is " + mid);
-            if(products[mid].compareTo(prefix) >= 0) {
-                j = mid;
+    //Insert the String into Trie
+    void insert(String s) {
+        curr = root;
+        
+        for(char c : s.toCharArray()) {
+            if(curr.children.get(c-'a') == null) {
+                curr.children.set(c-'a', new Node());
             }
-            else {
-                i = mid + 1;
-            }
+            curr = curr.children.get(c-'a');
         }
-        return i;
+        
+        curr.isWord = true; // Mark that complete word as isWord true
     }
-}
+    
+    List<String> getWordStartingWith(String prefix) {
+        curr = root; // Starting from the root
+        resultBuffer = new ArrayList<>();
+        
+        for(char c : prefix.toCharArray()) {
+            if(curr.children.get(c-'a') == null) return resultBuffer;
+            curr = curr.children.get(c-'a');
+        }
+        dfsWithPrefix(curr, prefix);
+        return resultBuffer;
+    }
+    
+};
