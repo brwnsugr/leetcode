@@ -16,21 +16,22 @@ class Solution {
         // 110001111000000 -> [2,3,4,6]
         
         if(s.length() == 1) return 0;
-        List<Integer> groups = new ArrayList<>();
+        int[] groups = new int[s.length()];
+        groups[0] = 1;
         int count = 1;
-        for(int i = 0; i < s.length()-1; i++) {
-            if(s.charAt(i) == s.charAt(i+1)) count++; //"1100"
+        int t = 0;
+        for(int i = 1; i < s.length(); i++) {                // g[0] = 2, g[1]=2, 
+            if(s.charAt(i) != s.charAt(i-1)) groups[++t]=1; //"1100"
             else {
-                groups.add(count);
-                count = 1;
+                groups[t]++;
             }
         }
-        groups.add(count);
+        
         
         int answer = 0;
-        for(int i = 0; i < groups.size()-1; i++) {
+        for(int i = 0; i < t; i++) {
             int next = i + 1;
-            answer += Math.min(groups.get(i), groups.get(next));
+            answer += Math.min(groups[i], groups[next]);
         }
         return answer;
     }
