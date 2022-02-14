@@ -1,41 +1,30 @@
 class Solution {
-  public String[] reorderLogFiles(String[] logs) {
-    Comparator<String> myComp = myComp();
+    public String[] reorderLogFiles(String[] logs) {
     
-    Arrays.sort(logs, myComp);
-
-    return logs;
-  }
-  
-  Comparator<String> myComp() {
-    Comparator<String> myComp = new Comparator<String>() {
-      @Override
-      public int compare(String s1, String s2) {
-        String[] split1 = s1.split(" ", 2);
-        String[] split2 = s2.split(" ", 2);
-
-        boolean isDigit1 = Character.isDigit(split1[1].charAt(0));
-        boolean isDigit2 = Character.isDigit(split2[1].charAt(0));
-
-        //both are letter-logs
-
-
-        if(!isDigit1 && isDigit2) { // 1번이 먼저 오는 거는 return -1
-          return -1;
-        }
-        else if (!isDigit1 && !isDigit2) {
-          int cmp = split1[1].compareTo(split2[1]);
-          if( cmp != 0) {
-            return cmp;
-          }
-          return split1[0].compareTo(split2[0]);
-        }
-        else if(isDigit1 && !isDigit2) { // 2 번이 먼저 오는거는 return 1
-          return 1;
-        } 
-        return 0;
-      }
-    };
-    return myComp;
-  }
+        Arrays.sort(logs, new Comparator<String>(){
+            @Override
+            public int compare(String t1, String t2) {
+                
+                String[] p1 = t1.split(" ", 2);
+                String[] p2 = t2.split(" ", 2);
+                
+                boolean p1Digit = Character.isDigit(p1[1].charAt(0));
+                boolean p2Digit = Character.isDigit(p2[1].charAt(0));
+                
+                if(!p1Digit && p2Digit) return -1;
+                else if(p1Digit && !p2Digit) return 1;
+                else if(!p1Digit && !p2Digit) {
+                    if(p1[1].equals(p2[1])) {
+                        return p1[0].compareTo(p2[0]);
+                    }
+                    return p1[1].compareTo(p2[1]);
+                }
+                else {
+                    return 0;
+                }
+            }
+        });
+        
+        return logs;
+    }
 }
