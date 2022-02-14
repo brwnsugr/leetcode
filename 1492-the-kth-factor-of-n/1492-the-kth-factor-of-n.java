@@ -2,6 +2,11 @@ class Solution {
     
     private int size;
     
+    private void pushHeap(int input, Queue<Integer> maxHeap) {
+        maxHeap.add(input);
+        if(maxHeap.size() > size) maxHeap.remove();
+    }
+    
     public int kthFactor(int n, int k) {
         // 15 ->
         // sqrt of 15 -> 3.xx  3
@@ -18,17 +23,12 @@ class Solution {
         
         for(int i = 1; i < r + 1 ; i++) {
             if(n % i == 0) {
-                //heap <- 1, 16^, 2^, 8^, 4
-                maxHeap.add(i);
-                if(maxHeap.size() > size) maxHeap.remove();
                 if( i != n / i) {
-                    maxHeap.add(n/i);
-                    if(maxHeap.size() > size) maxHeap.remove();
+                    pushHeap(n/i, maxHeap);
                 }
+                pushHeap(i, maxHeap);
             }
         }
-        
         return k == maxHeap.size() ? maxHeap.poll() : -1;
-        
     }
 }
