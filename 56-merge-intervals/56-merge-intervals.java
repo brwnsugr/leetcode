@@ -12,30 +12,24 @@ class Solution {
         */
         
         Arrays.sort(intervals, (int[] t1, int[] t2)->t1[0] - t2[0]);
-        
+    
         int start = intervals[0][0];
         int end = intervals[0][1];
         int[][] mergedIntervals = new int[intervals.length][2];
         int t = 0;
-        for(int i = 0; i < intervals.length - 1; i++) {
-            if(intervals[i+1][0] <= end) {
-                //[1,10], [4,5], [6,7]
-                // end = 10
-                // end = 5, 7
+        for(int i = 0; i < intervals.length; i++) {
+            if(i < intervals.length -1 && intervals[i+1][0] <= end) {
                 end = Math.max(intervals[i][1], Math.max(end, intervals[i+1][1]));
             }
             
             else {
                 mergedIntervals[t][0] = start;
                 mergedIntervals[t++][1] = end;
-                
+                if(i == intervals.length -1) break;
                 start = intervals[i+1][0];
                 end = intervals[i+1][1];
             }
         }
-        mergedIntervals[t][0] = start;
-        mergedIntervals[t][1] = end;
-        
-        return Arrays.copyOfRange(mergedIntervals, 0, t+1);
+        return Arrays.copyOfRange(mergedIntervals, 0, t);
     }
 }
