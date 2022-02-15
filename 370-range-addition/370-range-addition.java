@@ -1,26 +1,28 @@
 class Solution {
     public int[] getModifiedArray(int length, int[][] updates) {
+        //Ranging Cache 
+        //[0,0,0,0,0] [[0,2,1]]
+        //[1,0,0,-1,0]
         
         
-        /*
-        0,0,0,0,0
+        // res = res + arr[4]; 
+        // [1,1,1,0,0]
         
-        0,2,0,2,0
-        0,2,3,2,3
-        
-       -2,2,1,2,3
-        
-        */
         int[] arr = new int[length];
         
         for(int[] update : updates) {
-            int start = update[0];
-            int end = update[1];
-            int value = update[2];
-            for(int i = start; i <= end; i++) {
-                arr[i] += value;
+            arr[update[0]] += update[2];
+            if(update[1] < length - 1) {
+                arr[update[1]+1] -= update[2];
             }
         }
+        
+        int res = 0;
+        for(int i = 0; i < length; i++) {
+            res += arr[i];
+            arr[i] = res;
+        }
+        
         return arr;
     }
 }
