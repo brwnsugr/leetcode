@@ -1,36 +1,32 @@
 class Solution {
-    
     private List<List<Integer>> res;
     
+    int count;
+    int len;
+    
     public List<List<Integer>> subsets(int[] nums) {
-        /*
-       [ 1]
-      /   |   \
-     1    2    3
-    /|\ 
-         
-        */
-        List<List<Integer>> res = new ArrayList<>();
-        res.add(new ArrayList<>());
+        len = nums.length;
+        res = new ArrayList<>();
         
-        for(int num : nums) {
-            List<List<Integer>> newSubsets = new ArrayList<>();
-            for(List<Integer> curr : res) {
-                List<Integer> temp = new ArrayList<>(curr);
-                temp.add(num);
-                newSubsets.add(temp);
-            }
-            
-            for(List<Integer> subset : newSubsets) {
-                res.add(subset);
-            }
+        
+        for(int i = 0; i <= len; i++) {
+            List<Integer> trace = new ArrayList<>();
+            count = i;
+            backTrack(0, nums, trace, 0);
+        }
+        return res;
+    }
+    
+    private void backTrack(int firstIdx, int[] nums, List<Integer> trace, int currentCount) {
+        if(currentCount == count) {
+            res.add(new ArrayList<>(trace));
+            return;
         }
         
-        return res;
-        
+        for(int i = firstIdx; i < len; i++) {
+            trace.add(nums[i]);
+            backTrack(i+1, nums, trace, currentCount+1);
+            trace.remove(trace.size()-1);
+        }
     }
-
-    
-    
-    
 }
