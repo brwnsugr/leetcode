@@ -27,11 +27,11 @@ class TreeNode extends Node {
             int left = dfs(curr.left);
             int right = dfs(curr.right);
             if(curr.val.equals("+")) return left + right;
-            if(curr.val.equals("-")) return left - right;
-            if(curr.val.equals("*")) return left * right;
-            if(curr.val.equals("/")) return left / right;
+            else if(curr.val.equals("-")) return left - right;
+            else if(curr.val.equals("*")) return left * right;
+            else return left / right;
         }
-        return Integer.parseInt(curr.val);
+        else return Integer.parseInt(curr.val);
     }
     
     public TreeNode(String val) {
