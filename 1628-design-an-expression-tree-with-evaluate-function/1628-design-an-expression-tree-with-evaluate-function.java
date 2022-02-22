@@ -31,7 +31,7 @@ class TreeNode extends Node {
             else if(curr.val.equals("*")) return left * right;
             else return left / right;
         }
-        else return Integer.parseInt(curr.val);
+        return Integer.parseInt(curr.val);
     }
     
     public TreeNode(String val) {
