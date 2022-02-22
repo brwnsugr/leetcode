@@ -10,31 +10,28 @@
  */
 class Solution {
     public ListNode mergeTwoLists(ListNode list1, ListNode list2) {
-       ListNode dummy = new ListNode(-1);
-       ListNode curr = dummy;
+        ListNode dummy = new ListNode();
+        recursiveMerge(dummy, list1, list2);
         
-       recursive(curr, list1, list2);
-        
-       return dummy.next;
+        return dummy.next;
     }
     
-    private void recursive(ListNode curr, ListNode list1, ListNode list2) {
-        while(list1 != null && list2 != null) {
-            int val1 = list1 == null ? 101 : list1.val;
-            int val2 = list2 == null ? 101 : list2.val;
-            if(val1 <= val2) {
-                curr.next = list1;
-                list1 = list1.next;
-            }
-            else {
-                curr.next = list2;
-                list2 = list2.next;
-            }
-            curr = curr.next;
+    private void recursiveMerge(ListNode curr, ListNode left, ListNode right) {
+        if(left == null && right == null) return;
+        else if(left == null){
+            curr.next = new ListNode(right.val);
+            recursiveMerge(curr.next, left, right.next);
         }
-        if(list1 != null) curr.next = list1;
-        if(list2 != null) curr.next = list2;
-        
+        else if(right == null) {
+            curr.next = new ListNode(left.val);
+            recursiveMerge(curr.next, left.next, right);
+        }
+        else {
+            int value = left.val <= right.val ? left.val : right.val;
+            boolean leftFlag = value == left.val ? true : false;
+            curr.next = new ListNode(value);
+            if(leftFlag) recursiveMerge(curr.next, left.next, right);
+            else recursiveMerge(curr.next, left, right.next);
+        }
     }
-    
 }
