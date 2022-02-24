@@ -14,36 +14,50 @@ class Node {
 */
 
 class Solution {
-    Map<Node, Node> visitedMap = new HashMap<>();
+    private Map<Node, Node> visitedMap;
+
+    
     public Node copyRandomList(Node head) {
+        
+        /*
+        High Level Approach
+        Iterating over the list, creating new cloned node with its cloned random pointer and the cloned next pointer 
+        which is mapping one by one to the original nodes.
+        
+        
+        A(R: D)->B(R: A)->C(R: A)->D(R: A)
+        
+        A'(R: ^D') -> ... -> ^D'()
+        
+        Map[(A, A'), (D, D')]
+        
+        ^D == ^D  -> key: D, value : D'
+        */
+        
         if(head == null) return null;
         
+        visitedMap = new HashMap<>();
         Node oldNode = head;
-        Node newNode = new Node(head.val);
-        Node newHead = newNode;
-        visitedMap.put(head, newNode);
+        Node newNode = new Node(oldNode.val);
+        visitedMap.put(oldNode, newNode);
         
         while(oldNode != null) {
-            
-            newNode.next = GetClonedNode(oldNode.next);
-            newNode.random = GetClonedNode(oldNode.random);
+            newNode.next = getClone(oldNode.next);
+            newNode.random = getClone(oldNode.random);
             
             oldNode = oldNode.next;
             newNode = newNode.next;
         }
         
+        
         return visitedMap.get(head);
     }
     
-    
-    private Node GetClonedNode(Node node) {
-        if(node == null) return null;
-        else if(visitedMap.containsKey(node))  {
-            return visitedMap.get(node);
+    private Node getClone(Node curr) {
+        if(curr==null) return null;
+        if(!visitedMap.containsKey(curr)) {
+            visitedMap.put(curr, new Node(curr.val)); 
         }
-        else {
-            visitedMap.put(node, new Node(node.val));
-            return visitedMap.get(node);
-        }
+        return visitedMap.get(curr);
     }
 }
