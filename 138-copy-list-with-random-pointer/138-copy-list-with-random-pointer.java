@@ -41,16 +41,16 @@ class Solution {
         Node newNode = new Node(oldNode.val);
         visitedMap.put(oldNode, newNode);
         
-        while(oldNode != null) {
-            newNode.next = getClone(oldNode.next);
-            newNode.random = getClone(oldNode.random);
-            
-            oldNode = oldNode.next;
-            newNode = newNode.next;
-        }
-        
+        traverseNodes(oldNode, newNode);
         
         return visitedMap.get(head);
+    }
+    
+    private void traverseNodes(Node oldNode, Node newNode) {
+        if(oldNode==null) return;
+        newNode.next = getClone(oldNode.next);
+        newNode.random = getClone(oldNode.random);
+        traverseNodes(oldNode.next, newNode.next);
     }
     
     private Node getClone(Node curr) {
