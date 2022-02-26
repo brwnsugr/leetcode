@@ -1,32 +1,34 @@
 class Solution {
-    private List<List<Integer>> res;
     
-    int count;
-    int len;
+    List<List<Integer>> answers = new ArrayList<>();
     
     public List<List<Integer>> subsets(int[] nums) {
-        len = nums.length;
-        res = new ArrayList<>();
-        
-        
-        for(int i = 0; i <= len; i++) {
-            List<Integer> trace = new ArrayList<>();
-            count = i;
-            backTrack(0, nums, trace, 0);
+        /**
+        0개: 1, 1개: 3, 2개: 
+        */
+        List<Integer> res;
+        for(int i = 0; i <= nums.length; i++) {
+            res = new ArrayList<>();
+            recursive(0, nums, res, 0, i);
         }
-        return res;
+        return answers;
     }
     
-    private void backTrack(int firstIdx, int[] nums, List<Integer> trace, int currentCount) {
-        if(currentCount == count) {
-            res.add(new ArrayList<>(trace));
+    
+    private void recursive(int firstIdx, int[] nums, List<Integer> res, int currentCount, int target) {
+        
+        
+        if(currentCount == target) {
+            List<Integer> answer = new ArrayList<>(res);
+            answers.add(answer);
             return;
         }
         
-        for(int i = firstIdx; i < len; i++) {
-            trace.add(nums[i]);
-            backTrack(i+1, nums, trace, currentCount+1);
-            trace.remove(trace.size()-1);
+        
+        for(int i = firstIdx; i < nums.length; i++) {
+            res.add(nums[i]);
+            recursive(i+1, nums, res, currentCount + 1, target);
+            res.remove(res.size()-1);
         }
     }
 }
