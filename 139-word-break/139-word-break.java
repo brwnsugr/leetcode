@@ -17,10 +17,11 @@ class Solution {
       String subString = s.substring(startIdx, i);
       if(wordDict.contains(subString) && traverse(s, i, wordDict)) { // remaining portio
           // for remainig portion we cached cache[i] : remaining string starting from the ith idx. 
-        return cache[startIdx] = true;
-        // return true;
+        cache[startIdx] = true;
+        return true;
       }
     }
-    return cache[startIdx] = false;
+    cache[startIdx] = false;
+    return false;
   }
 }
