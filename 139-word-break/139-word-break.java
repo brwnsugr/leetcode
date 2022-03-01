@@ -1,21 +1,26 @@
 class Solution {
+    
+  Boolean cache[];
+    
   public boolean wordBreak(String s, List<String> wordDict) {
-    boolean[] dp = new boolean[s.length()+1];
-    Set<String> set = new HashSet<>();
+    cache = new Boolean[s.length()];
+    return traverse(s, 0, new HashSet<>(wordDict));
+  }
+  
+  private boolean traverse(String s, int startIdx, Set<String> wordDict) {
     
-    for(String word : wordDict) {
-      set.add(word);
+    if(startIdx == s.length()) {
+      return true;
     }
-    dp[0] = true;
-    
-    for(int i = 1; i <= s.length(); i++) {
-      for(int j = 0; j < i; j++) {
-        if(dp[j] && set.contains(s.substring(j,i))) {
-          dp[i] = true;
-          break;
-        }
+    if(cache[startIdx] != null) return cache[startIdx];
+    for(int i = startIdx+1; i <= s.length(); i++) { 
+      String subString = s.substring(startIdx, i);
+      if(wordDict.contains(subString) && traverse(s, i, wordDict)) { // remaining portio
+          // for remainig portion we cached cache[i] : remaining string starting from the ith idx. 
+        return cache[startIdx] = true;
+        // return true;
       }
     }
-    return dp[s.length()];
+    return cache[startIdx] = false;
   }
 }
