@@ -12,7 +12,7 @@ class Solution {
     if(startIdx == s.length()) {
       return true;
     }
-    if(cache[startIdx] != null) return cache[startIdx];
+    else if(cache[startIdx] != null) return cache[startIdx];
     for(int i = startIdx+1; i <= s.length(); i++) { 
       String subString = s.substring(startIdx, i);
       if(wordDict.contains(subString) && traverse(s, i, wordDict)) { // remaining portio
