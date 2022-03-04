@@ -1,32 +1,50 @@
+
+
 class MinStack {
+    
+    List<Node> list;
 
-  private List<Integer> list;
-
-  public MinStack() {
-    list = new LinkedList<>();
-  }
-
-  public void push(int val) {
-    list.add(val);
-  }
-
-  public void pop() {
-    if(list.size() == 0) return;
-    list.remove(list.size()-1);
-  }
-
-  public int top() {
-    return list.get(list.size()-1);
-  }
-
-  public int getMin() {
-    int min = Integer.MAX_VALUE;
-    for(int i : list) {
-      min = Math.min(min, i);
+    public MinStack() {
+        list = new LinkedList<>();
     }
-    return min;
-  }
+    
+    public void push(int val) {
+        if(list.size() == 0) {
+            list.add(new Node(val, val));
+        }
+        else {
+            Node prev = list.get(list.size()-1);
+            int minVal = Math.min(prev.minVal, val);
+            list.add(new Node(val, minVal));
+        }
+        
+    }
+    
+    public void pop() { //    S = ( (v: 10, m: 10), (v: ^4, m :4), (v: ^3, m: 3^)) -> 
+        list.remove(list.size()-1);
+    }
+    
+    public int top() {
+        Node ret = list.get(list.size()-1);
+        return ret.val;
+    }
+    
+    public int getMin() {
+        return list.get(list.size()-1).minVal;
+    }
+    
+    static class Node {
+        int val;
+        int minVal;
+        
+        public Node(int val, int minVal) {
+            this.val = val;
+            this.minVal = minVal;
+        }
+    }
 }
+
+
 
 /**
  * Your MinStack object will be instantiated and called as such:
