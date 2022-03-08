@@ -30,14 +30,13 @@ class Solution {
     
     private boolean recursive(TreeNode left, TreeNode right) {
         if(left == null && right == null) return true;
-        if(left == null || right == null) return false;
-        if(left.val == right.val 
+        else if(left == null || right == null) return false;
+        else if(left.val == right.val 
            && recursive(left.left, right.right) 
            && recursive(left.right, right.left)) { 
             return true;
         }
-        return false;
-        
+        else return false;
     }
     
     
