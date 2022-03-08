@@ -21,9 +21,7 @@
     
  */
 class Solution {
-    
-    private List<Integer> elementsByLevel = new ArrayList<>();
-    
+
     public boolean isSymmetric(TreeNode root) {
         return recursive(root.left, root.right);
     }
