@@ -1,23 +1,20 @@
 class Solution {
     public int subarraySum(int[] nums, int k) {
-    
         
-        //set the starting point at the array 
-        // from the starting point, we cumulatively sum it and check if its summations equals k 
-        // then added answer by 1 
-    //       ^ ^ 
-        //[1,1,2,3]
-        // k= 3
+        Map<Integer, Integer> m = new HashMap<>();
         
-        
+        m.put(0, 1); // m = [{0,1},{1,1},{2,1}], a = 1, 
         int answer = 0;
-        for(int start = 0; start < nums.length; start++) {
-            int partialSum = 0;
-            for(int end = start; end < nums.length; end++) {
-                partialSum += nums[end];
-                if(partialSum == k) answer++;
+        int sum = 0;
+        for(int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            if(m.containsKey(sum-k)) {
+                answer += m.get(sum-k);
             }
+            m.put(sum, m.getOrDefault(sum, 0) + 1);
         }
+        
         return answer;
+        
     }
 }
