@@ -1,15 +1,21 @@
 class Solution {
     public int subarraySum(int[] nums, int k) {
-        int[] cumSum = new int[nums.length+1];
-
-        for(int i = 0; i < nums.length; i++) {
-            cumSum[i+1] = nums[i] + cumSum[i];
-        }
+    
+        
+        //set the starting point at the array 
+        // from the starting point, we cumulatively sum it and check if its summations equals k 
+        // then added answer by 1 
+    //       ^ ^ 
+        //[1,1,2,3]
+        // k= 3
+        
         
         int answer = 0;
         for(int start = 0; start < nums.length; start++) {
-            for(int end = start + 1 ; end <= nums.length; end++) {
-                if(cumSum[end] - cumSum[start] == k) answer++;
+            int partialSum = 0;
+            for(int end = start; end < nums.length; end++) {
+                partialSum += nums[end];
+                if(partialSum == k) answer++;
             }
         }
         return answer;
