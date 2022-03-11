@@ -1,27 +1,34 @@
 class Solution {
+    // Set<String> dict;
     
-  Boolean cache[];
-    
-  public boolean wordBreak(String s, List<String> wordDict) {
-    cache = new Boolean[s.length()];
-    return traverse(s, 0, new HashSet<>(wordDict));
-  }
-  
-  private boolean traverse(String s, int startIdx, Set<String> wordDict) {
-    
-    if(startIdx == s.length()) {
-      return true;
+    Boolean[] cache;
+    public boolean wordBreak(String s, List<String> wordDict) {
+        
+        cache = new Boolean[s.length()];
+
+        return isValid(s, 0, new HashSet<>(wordDict));
     }
-    else if(cache[startIdx] != null) return cache[startIdx];
-    for(int i = startIdx+1; i <= s.length(); i++) { 
-      String subString = s.substring(startIdx, i);
-      if(wordDict.contains(subString) && traverse(s, i, wordDict)) { // remaining portio
-          // for remainig portion we cached cache[i] : remaining string starting from the ith idx. 
-        cache[startIdx] = true;
-        return true;
-      }
+    
+    private boolean isValid(String s, int startIdx, Set<String> dict) {
+        if(startIdx == s.length()) {
+            return true;
+        }
+        if (cache[startIdx] != null) return cache[startIdx];
+        for(int start = startIdx+1; start <= s.length(); start++) {
+            String subStr = s.substring(startIdx, start); // s.substring(3,4)
+            // leet/code ,[leet, code]
+            if(dict.contains(subStr) && isValid(s, start, dict)) { // subStr = t
+                cache[startIdx] = true;
+                return true;
+            }
+        }
+        cache[startIdx] = false;
+        return false;
     }
-    cache[startIdx] = false;
-    return false;
-  }
+    
+    
+    
+    
+    
+    
 }
