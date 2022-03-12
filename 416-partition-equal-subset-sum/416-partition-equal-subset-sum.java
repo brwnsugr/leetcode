@@ -17,7 +17,6 @@ class Solution {
     
     private boolean isValid(int[] nums, int remainCount, int cumSum) {
         if(cumSum == target) {
-            cache[remainCount][cumSum] = true;
             return true;
         }
         if(remainCount == 0 || cumSum > target) {
@@ -26,7 +25,6 @@ class Solution {
         }
         if(cache[remainCount][cumSum] != null) return cache[remainCount][cumSum]; 
         if(isValid(nums, remainCount-1, cumSum+nums[remainCount-1]) || isValid(nums, remainCount-1, cumSum)) {
-            cache[remainCount][cumSum] = true;
             return true;
         }
         
