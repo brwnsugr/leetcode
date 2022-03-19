@@ -16,12 +16,18 @@
 class Solution {
     
     public TreeNode invertTree(TreeNode root) {
-        if(root == null) return null;
-        TreeNode right = invertTree(root.right);
-        TreeNode left = invertTree(root.left);
-        root.right = left;
-        root.left = right;
+        recursive(root);
         return root;
+    }
+    
+    private void recursive(TreeNode curr) {
+        if(curr == null) return;
+        TreeNode left = curr.left;
+        curr.left = curr.right;
+        curr.right = left;
+        recursive(curr.left);
+        recursive(curr.right);
+        return;
     }
     
 
