@@ -1,33 +1,28 @@
 class Solution {
     
     List<List<Integer>> answers = new ArrayList<>();
-    
     public List<List<Integer>> permute(int[] nums) {
-        
-        Set<Integer> numSet = new HashSet<>();
-        List<Integer> arrList = new ArrayList<>();
-        backTrack(nums, numSet, arrList);
-        
+        // int[] arr = new int[]
+        perm(0, nums.length, nums);
         return answers;
     }
     
-    private void backTrack(int[] nums, Set<Integer> numSet, List<Integer> arrList) {
-        if(numSet.size() == nums.length) {
-            List<Integer> answer = new ArrayList<>(arrList);
-            answers.add(answer);
-            arrList = new ArrayList<>();
+    private void perm(int start, int size, int[] nums) {
+        if(start == size - 1) {
+            List<Integer> listToAdd = new ArrayList<>();
+            for(int num : nums) listToAdd.add(num);
+            answers.add(listToAdd);
             return;
         }
         
-        for(int i = 0; i < nums.length; i++) {
-            if(!numSet.contains(nums[i])) {
-                numSet.add(nums[i]);
-                arrList.add(nums[i]);
-                backTrack(nums, numSet, arrList);
-                numSet.remove(nums[i]);
-                arrList.remove(arrList.size()-1);
-            }
+        for(int idxSwap = start; idxSwap < size; idxSwap++) {
+            int temp = nums[idxSwap];
+            nums[idxSwap] = nums[start];
+            nums[start] = temp;
+            perm(start + 1, size, nums);
+            temp = nums[idxSwap];
+            nums[idxSwap] = nums[start];
+            nums[start] = temp;
         }
-        
     }
 }
