@@ -2,7 +2,6 @@ class Solution {
     
     List<List<Integer>> answers = new ArrayList<>();
     public List<List<Integer>> permute(int[] nums) {
-        // int[] arr = new int[]
         perm(0, nums.length, nums);
         return answers;
     }
