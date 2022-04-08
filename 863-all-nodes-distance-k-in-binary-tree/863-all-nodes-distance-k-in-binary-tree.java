@@ -9,59 +9,77 @@
  */
 class Solution {
     
-    Map<TreeNode, TreeNode> parentMap = new HashMap<>();
+    private Map<TreeNode, TreeNode> parentMap = new HashMap<>();
+    List<Integer> answers = new ArrayList<>();
+    
     public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
-        List<Integer> answers = new ArrayList<>();
-        dfs(root, null);
-        Queue<TreeNode> q = new LinkedList<>();
+        
+        
+        // Map
+        fillParentMap(root, null);
+        
+        // BFS 
         Set<TreeNode> visited = new HashSet<>();
+        Queue<TreeNode> q = new LinkedList<>();
         
         q.add(null);
         q.add(target);
-        visited.add(target);
         
         int dist = 0;
         
+        
+        // Q = [null, target]
+        //
+        visited.add(target);
+        //traverse by BFS 
         while(!q.isEmpty()) {
-            TreeNode currNode = q.poll();
-            
-            if(currNode == null) {
+            TreeNode curr = q.poll();// q = [7,4,1]; 
+            if(curr == null) {
+                //밑장이 나오면 dist를 체크하고 dist==k -> q 에 있는 모든 원소들을 넣어주고 답 출력
                 if(dist == k) {
+                    // q에 있는 모든 원소를 넣어줌
                     for(TreeNode item : q) {
                         answers.add(item.val);
                     }
                     return answers;
                 }
-                dist++;
+                dist++; // dist = 2
                 q.add(null);
             }
+            
             else {
-                if(currNode.left != null && !visited.contains(currNode.left)) {
-                    q.add(currNode.left);
-                    visited.add(currNode.left);
+                if(curr.left != null && !visited.contains(curr.left)) {
+                    q.add(curr.left);
+                    visited.add(curr.left); // q = [null] 
                 }
-                if(currNode.right != null && !visited.contains(currNode.right)) {
-                    q.add(currNode.right);
-                    visited.add(currNode.right);
+                //right
+                if(curr.right != null && !visited.contains(curr.right)) {
+                    q.add(curr.right);
+                    visited.add(curr.right);
                 }
-                if(parentMap.get(currNode) != null && !visited.contains(parentMap.get(currNode))) {
-                    q.add(parentMap.get(currNode));
-                    visited.add(parentMap.get(currNode));
+               // parent
+                TreeNode par = parentMap.get(curr);
+                if(par != null && !visited.contains(par)) {
+                    q.add(par);
+                    visited.add(par);
                 }
             }
+            
         }
         
         return answers;
+        
+        
+        
     }
     
+    //fill the parentMap 
     
-    private void dfs(TreeNode curr, TreeNode parent) {
+    private void fillParentMap(TreeNode curr, TreeNode parent) {
         if(curr != null) {
             parentMap.put(curr, parent);
-            dfs(curr.left, curr);
-            dfs(curr.right, curr);
+            fillParentMap(curr.left, curr);
+            fillParentMap(curr.right, curr);
         }
     }
-    
-    
 }
