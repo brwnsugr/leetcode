@@ -3,7 +3,7 @@ class MyHashSet {
     private int bucketSize;
     
     public MyHashSet() {
-        this.bucketSize = 1000;
+        this.bucketSize = 10000;
         this.buckets = new Bucket[this.bucketSize];
         for (int i = 0; i < this.bucketSize; ++i)
           this.buckets[i] = new Bucket();
