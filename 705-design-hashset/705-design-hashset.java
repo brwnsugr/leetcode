@@ -1,23 +1,61 @@
 class MyHashSet {
-    private boolean[] set;
+    private Bucket[] buckets;
+    private int bucketSize;
     
     public MyHashSet() {
-        set = new boolean[1000001];
-        Arrays.fill(set, false);
+        this.bucketSize = 769;
+        this.buckets = new Bucket[this.bucketSize];
+        for (int i = 0; i < this.bucketSize; ++i)
+          this.buckets[i] = new Bucket();
+    }
+    
+    private int hash(int key) {
+        return (key % this.bucketSize);
     }
     
     public void add(int key) {
-        set[key] = true;
+        buckets[hash(key)].add(key);
     }
     
     public void remove(int key) {
-        set[key] = false;
+        buckets[hash(key)].remove(key);
     }
     
     public boolean contains(int key) {
-        return set[key];
+        return buckets[hash(key)].exist(key);
     }
+    //Modulo + LinkedList
+    
+    
+    static class Bucket{
+        private LinkedList<Integer> container;
+        
+        public Bucket(){
+            container = new LinkedList<Integer>();
+        }
+        
+        public boolean exist(Integer key) {
+            int index = this.container.indexOf(key);
+            return (index != -1);
+        }
+        
+        public void add(Integer key) {
+            int index = this.container.indexOf(key);
+            if (index == -1) {
+              this.container.addFirst(key);
+            }
+        }
+        
+        public void remove(Integer key) {
+            this.container.remove(key);
+        }
+    }
+    
+        
 }
+
+
+
 
 /**
  * Your MyHashSet object will be instantiated and called as such:
