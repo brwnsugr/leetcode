@@ -15,10 +15,9 @@ class Solution {
         //       s
         // 1->2->3->4->5
         //             f
-        while(fast.next != null) {
+        while(fast != null && fast.next != null) {
             slow = slow.next;
-            fast = fast.next;
-            if(fast.next != null) fast = fast.next;
+            fast = fast.next.next;
         }
         
         return slow;
