@@ -1,37 +1,32 @@
 class Solution {
-  public static String[] DIGIT_LIST = {
-      null,
-      null,
-      "abc",
-      "def",
-      "ghi",
-      "jkl",
-      "mno",
-      "pqrs",
-      "tuv",
-      "wxyz"
-  };
-
-  private List<String> res = new ArrayList<>();
-
-  public List<String> letterCombinations(String digits) {
-    if(digits.length() == 0) return res;
-    dfs(0, "", digits);
-
-    return res;
-  }
-
-  private void dfs(int digitOrder, String letter, String digits) {
-    if(digitOrder == digits.length()) {
-      res.add(String.copyValueOf(letter.toCharArray()));
-      return;
+    
+    List<String> answers;
+    private static Map<Integer, char[]> dialMap = new HashMap<>(){{
+        put(2, new char[]{'a','b','c'});
+        put(3, new char[]{'d','e','f'});
+        put(4, new char[]{'g','h','i'});
+        put(5, new char[]{'j','k','l'});
+        put(6, new char[]{'m','n','o'});
+        put(7, new char[]{'p','q','r','s'});
+        put(8, new char[]{'t','u','v'});
+        put(9, new char[]{'w','x','y','z'});}};
+    public List<String> letterCombinations(String digits) {
+        //2: [abc], 3: [def]
+        answers = new ArrayList<>();
+        if(digits.length() == 0) return answers;
+        recursive(digits, 0, "");
+        return answers;
     }
-    else {
-      String digit = DIGIT_LIST[Integer.valueOf(digits.charAt(digitOrder)-'0')];
-      for(int i = 0; i < digit.length(); i++) {
-        dfs(digitOrder+1, letter + digit.substring(i, i+1), digits);
-      }
+    
+    private void recursive(String digits, int count, String dial) {
+        if(count == digits.length()) {
+            answers.add(new String(dial));
+            return;
+        }
+        int currNum = digits.charAt(count) - '0';
+        char[] chars = dialMap.get(currNum);
+        for(char c : chars) {
+            recursive(digits, count + 1, dial + c);
+        }
     }
-    return;
-  }
 }
