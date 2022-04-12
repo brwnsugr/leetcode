@@ -10,23 +10,27 @@ class Solution {
         put(7, new char[]{'p','q','r','s'});
         put(8, new char[]{'t','u','v'});
         put(9, new char[]{'w','x','y','z'});}};
+    
+    
     public List<String> letterCombinations(String digits) {
         //2: [abc], 3: [def]
         answers = new ArrayList<>();
         if(digits.length() == 0) return answers;
-        recursive(digits, 0, "");
+        recursive(digits, 0, new StringBuilder());
         return answers;
     }
     
-    private void recursive(String digits, int count, String dial) {
+    private void recursive(String digits, int count, StringBuilder strBuilder) {
         if(count == digits.length()) {
-            answers.add(new String(dial));
+            answers.add(new String(strBuilder));
             return;
         }
         int currNum = digits.charAt(count) - '0';
         char[] chars = dialMap.get(currNum);
         for(char c : chars) {
-            recursive(digits, count + 1, dial + c);
+            strBuilder.append(c);
+            recursive(digits, count + 1, strBuilder);
+            strBuilder.deleteCharAt(strBuilder.length()-1);
         }
     }
 }
