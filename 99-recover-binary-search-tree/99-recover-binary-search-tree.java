@@ -32,14 +32,12 @@ class Solution {
         for(int i = 0; i < currentList.size() - 1; i++) {
             int prev = currentList.get(i);
             int next = currentList.get(i+1);
-            
-            if(prev > next && !descendingFound) {
-                y = prev;
+            if(prev > next) {
                 x = next;
-                descendingFound = true;
-            }
-            else if(prev > next && descendingFound) {
-                x = next;
+                if(!descendingFound) {
+                    y = prev;
+                    descendingFound = true;
+                }
             }
         }
         traverseForReplace(root, x, y);
