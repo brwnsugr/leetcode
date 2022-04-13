@@ -16,6 +16,8 @@
 class Solution {
     
     private List<Integer> currentList = new ArrayList<>();
+    List<Integer> sortedList;
+    int idx = 0;
     public void recoverTree(TreeNode root) {
         //Naive approach -> traverse by inorder and find a pair that should be changed
         // 1,4(y),2(x),5,6,7,9 -> y <-> x swipe
@@ -26,29 +28,20 @@ class Solution {
         TreeNode curr = root;
         inOrder(curr);
 
-        boolean descendingFound = false;
-        int y = 0;
-        int x = 0;
-        for(int i = 0; i < currentList.size() - 1; i++) {
-            int prev = currentList.get(i);
-            int next = currentList.get(i+1);
-            if(prev > next) {
-                x = next;
-                if(!descendingFound) {
-                    y = prev;
-                    descendingFound = true;
-                }
-            }
-        }
-        traverseForReplace(root, x, y);
+        sortedList = new ArrayList<>(currentList);
+        Collections.sort(sortedList);
+
+        traverseForReplace(root);
     }
     
-    private void traverseForReplace(TreeNode root, int x, int y) {
+    private void traverseForReplace(TreeNode root) {
         if(root != null) {
-            if(root.val == y) root.val = x;
-            else if(root.val == x) root.val = y;
-            traverseForReplace(root.left, x, y);
-            traverseForReplace(root.right, x, y);
+            traverseForReplace(root.left);
+            int currVal = currentList.get(idx);
+            int sortedVal = sortedList.get(idx);
+            if(currVal != sortedVal) root.val = sortedVal;
+            idx++;
+            traverseForReplace(root.right);
         }
     }
     
