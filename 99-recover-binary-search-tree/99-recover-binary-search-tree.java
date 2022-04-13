@@ -43,21 +43,16 @@ class Solution {
             }
         }
         traverseForReplace(root, x, y);
-        
-        
     }
     
-    // when we meet y, replace with x, 
-    // when we meet x, replace with y. 
     private void traverseForReplace(TreeNode root, int x, int y) {
         if(root != null) {
-            traverseForReplace(root.left, x, y);
             if(root.val == y) root.val = x;
             else if(root.val == x) root.val = y;
+            traverseForReplace(root.left, x, y);
             traverseForReplace(root.right, x, y);
         }
     }
-    
     
     
     private void inOrder(TreeNode root) {
