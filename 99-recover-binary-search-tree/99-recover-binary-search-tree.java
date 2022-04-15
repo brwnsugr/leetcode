@@ -14,43 +14,64 @@
  * }
  */
 class Solution {
+    private List<Integer> paths = new ArrayList<>();
+    private int x = 0;
+    private int y = 0;
     
-    private List<Integer> currentList = new ArrayList<>();
-    List<Integer> sortedList;
-    int idx = 0;
     public void recoverTree(TreeNode root) {
-        //Naive approach -> traverse by inorder and find a pair that should be changed
-        // 1,4(y),2(x),5,6,7,9 -> y <-> x swipe
-        
-        // 1. inorder traversal -> current List = 
-        // 2. current List -> y, x pair find -> 1,5(y)->4-> 2(x),7,9
-        
+        //  TreeNode curr -left subtree 는 모두 curr 보다 작아야 한다는 생각을 
+        // 
+        //  
+        // 1. inOrder Traverse -> binary search tree
+        // 2. -> 잘못정렬된 pair를 찾는다. 
+        // 3. pair 를 swap.
         TreeNode curr = root;
         inOrder(curr);
+        for(int item : paths) System.out.println("item is " + item);
 
-        sortedList = new ArrayList<>(currentList);
-        Collections.sort(sortedList);
+        // [1,5(x),3,4,2(y),6] 
+        // 배열을 순회하면서, 뒤바뀐 연속된 원소를 한번 만나면, x,y 로 마킹, 두번째 만났을때 , y -> 새로운 감소가 시작한 원소로 마킹. 
+        // 
 
-        traverseForReplace(root);
+        int prevVal = paths.get(0);
+        boolean firstUnsortedMeet = false;
+        for(int i = 1; i < paths.size();  i++) {
+            int currVal = paths.get(i);
+            if(prevVal > currVal) {
+                y = currVal;
+                if(!firstUnsortedMeet) {   
+                    x = prevVal;
+                    firstUnsortedMeet = true;
+                }
+            }
+            prevVal = currVal;
+        }
+        
+        //다시 원래 트리를 순회하면서, swap을 해준다.
+        curr = root;
+        traverseRecover(curr);
     }
     
-    private void traverseForReplace(TreeNode root) {
-        if(root != null) {
-            traverseForReplace(root.left);
-            int currVal = currentList.get(idx);
-            int sortedVal = sortedList.get(idx);
-            if(currVal != sortedVal) root.val = sortedVal;
-            idx++;
-            traverseForReplace(root.right);
+    private void traverseRecover(TreeNode curr) {
+        
+        
+        if(curr != null) {
+            // x를 만났으면 -> y
+            if(curr.val == x) curr.val = y;
+            else if(curr.val == y) curr.val = x;
+            traverseRecover(curr.left);
+            traverseRecover(curr.right);
+            // y를 만났으면 -> x
         }
     }
     
     
-    private void inOrder(TreeNode root) {
-        if(root != null) {
-            inOrder(root.left);
-            currentList.add(root.val);
-            inOrder(root.right);
+    //1.inOrder
+    private void inOrder(TreeNode curr) {
+        if(curr != null) {
+            inOrder(curr.left);
+            paths.add(curr.val);
+            inOrder(curr.right);
         }
     }
 }
