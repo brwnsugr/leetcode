@@ -56,9 +56,10 @@ class Solution {
         
         if(curr != null) {
             // x를 만났으면 -> y
+            
+            traverseRecover(curr.left);
             if(curr.val == x) curr.val = y;
             else if(curr.val == y) curr.val = x;
-            traverseRecover(curr.left);
             traverseRecover(curr.right);
             // y를 만났으면 -> x
         }
