@@ -27,7 +27,6 @@ class Solution {
         // 3. pair 를 swap.
         TreeNode curr = root;
         inOrder(curr);
-        for(int item : paths) System.out.println("item is " + item);
 
         // [1,5(x),3,4,2(y),6] 
         // 배열을 순회하면서, 뒤바뀐 연속된 원소를 한번 만나면, x,y 로 마킹, 두번째 만났을때 , y -> 새로운 감소가 시작한 원소로 마킹. 
