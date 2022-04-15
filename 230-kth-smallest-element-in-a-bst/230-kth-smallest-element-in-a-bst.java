@@ -20,22 +20,17 @@ class Solution {
     private int answer = 0;
     public int kthSmallest(TreeNode root, int k) {
         
-        // N A: [5,3,6,2,4,1] -> [1,2,3^,4,5,6] count = 3 == k ->  
-        inOrder(root, k);
-        return answer;
-    }
-    
-    private void inOrder(TreeNode curr, int k) {
-        
-        if(curr != null) {
-            if(!kFound) inOrder(curr.left, k);
-            count++;
-            if(k == count) {
-                kFound = true;
-                answer = curr.val;
-                return;
+        Stack<TreeNode> s = new Stack<>();
+        while(true) {
+            while(root != null) {
+                s.add(root);
+                root = root.left;
             }
-            if(!kFound) inOrder(curr.right, k);
+            root = s.pop();
+            k--;
+            if(k == 0) return root.val;
+            root = root.right;
         }
     }
+
 }
