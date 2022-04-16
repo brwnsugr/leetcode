@@ -29,9 +29,8 @@ class Solution {
     
     private void recursive(TreeNode root, LinkedList<Integer> path, int tempSum) {
         //meet leaf node
-        if(root.left == null && root.right == null) {
-            if(tempSum == target) answers.add(new ArrayList<>(path));
-            return;
+        if(root.left == null && root.right == null && tempSum == target) {
+            answers.add(new ArrayList<>(path));
         }
 
         
