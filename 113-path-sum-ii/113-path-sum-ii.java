@@ -22,30 +22,24 @@ class Solution {
         if(root == null) return new ArrayList<>();
         LinkedList<Integer> path = new LinkedList<>();
         target = targetSum;
-        path.addLast(root.val);
-        recursive(root, path, root.val);
+        recursive(root, path, 0);
         return answers;
     }
     
     private void recursive(TreeNode root, LinkedList<Integer> path, int tempSum) {
         //meet leaf node
+        if(root == null) return;
+        path.add(root.val);
+        tempSum += root.val;
         if(root.left == null && root.right == null && tempSum == target) {
             answers.add(new ArrayList<>(path));
         }
-
-        
-        if(root.left != null){
-            path.addLast(root.left.val);
-            recursive(root.left, path, tempSum + root.left.val);
-            path.removeLast();
-        } 
-        
-    
-        if(root.right != null) {
-            path.addLast(root.right.val);
-            recursive(root.right, path, tempSum + root.right.val);
-            path.removeLast();
+        else {
+            recursive(root.left, path, tempSum);
+            recursive(root.right, path, tempSum);
         }
+        path.removeLast();
+        tempSum -= root.val;
             
     }
 }
