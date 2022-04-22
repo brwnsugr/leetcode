@@ -16,21 +16,30 @@
 class Solution {
     
     private int count = 0;
-    private boolean kFound = false;
     private int answer = 0;
+    private boolean kFound = false;
+    
     public int kthSmallest(TreeNode root, int k) {
+        // approach: in order traverse 해서, k번째 순회 시점의 element를 답으로 낸다.
+        // k > # of nodes 
         
-        Stack<TreeNode> s = new Stack<>();
-        while(true) {
-            while(root != null) {
-                s.add(root);
-                root = root.left;
+        inOrder(root, k); 
+        return answer;
+    }
+    
+    private void inOrder(TreeNode root, int k) {
+        if(kFound) return;
+        
+        if(root != null) {
+            inOrder(root.left, k);
+            //visit node
+            count++;
+            if(count == k) {
+                kFound = true;
+                answer = root.val;
+                return;
             }
-            root = s.pop();
-            k--;
-            if(k == 0) return root.val;
-            root = root.right;
+            inOrder(root.right, k);
         }
     }
-
 }
