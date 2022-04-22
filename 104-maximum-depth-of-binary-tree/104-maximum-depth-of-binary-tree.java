@@ -14,28 +14,30 @@
  * }
  */
 class Solution {
-    private int maxDepth = Integer.MIN_VALUE;
+    private int answer = 0;
     
     public int maxDepth(TreeNode root) {
+        // leaf 까지-> max depth 를 갱신 
+        if(root == null) return answer;
+        updateMaxDepth(root, 1);     //     
+        return answer;
         
-        //traverse with dfs  -> mark the depth with maximum size
-        // O(N)
         
-        //     3 
-        //    2 1
-        //
-        if(root == null) return 0;
-        traverse(root, 1);
-        return maxDepth;
+        //              3
+        //             9 20     d = 3
+        //            2^
     }
     
-    private void traverse(TreeNode curr, int depth) {
-        //meet leaf node
-        if(curr.left == null && curr.right == null) {
-            if(depth > maxDepth) maxDepth = depth;
+    private void updateMaxDepth(TreeNode root, int depth) {
+        // when we reach out to leaf node
+        if(root.left == null && root.right == null) {
+            answer = Math.max(depth, answer);
             return;
         }
-        if(curr.left != null) traverse(curr.left, depth + 1);
-        if(curr.right != null) traverse(curr.right, depth + 1);
+        
+        //recursive left
+        if(root.left!= null) updateMaxDepth(root.left, depth + 1);
+        // right
+        if(root.right != null) updateMaxDepth(root.right, depth + 1);
     }
 }
