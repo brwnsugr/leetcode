@@ -1,88 +1,89 @@
 class LRUCache {
-    
-    private int currentSize;
-    private int capacity;
-    DNode head;
-    DNode tail;
-    Map<Integer, DNode> cacheMap;
-    
 
+    
+    private int capacity;
+    private int currentCapacity;
+    private Map<Integer, DNode> map;
+    private DNode head, tail;
+    
     public LRUCache(int capacity) {
-        this.currentSize = 0;
         this.capacity = capacity;
-        this.cacheMap = new HashMap<>();
-        head = new DNode();
-        tail = new DNode();
+        this.currentCapacity = 0;
+        this.map = new HashMap<>();
+        this.head = new DNode();
+        this.tail = new DNode();
+        tail.next = null;
+        head.prev = null;
         head.next = tail;
         tail.prev = head;
-        
     }
     
     public int get(int key) {
-        DNode node = cacheMap.get(key);
-        if(node == null) return -1;
-        moveToHead(node);
-        return node.val;
+        if(map.containsKey(key)) {
+            DNode node = map.get(key);
+            moveToHead(node);
+            return node.value;
+        }
+        return -1;
     }
     
     public void put(int key, int value) {
-        if(cacheMap.containsKey(key)) {
-            DNode node = cacheMap.get(key);
-            node.val = value;
-            moveToHead(node);
+        DNode node = map.get(key);
+        
+        if(node == null) {
+            node = new DNode();
+            node.key = key;
+            node.value = value;
+            map.put(key, node);
+            addToHead(node);
+            currentCapacity++;
+            if(currentCapacity > capacity) {
+                DNode tailNode = tail;
+                map.remove(tailNode.prev.key);
+                removeTail();
+                currentCapacity--;
+            }
+            
         }
         else {
-            DNode newNode = new DNode();
-            newNode.key = key;
-            newNode.val = value;
-            
-            cacheMap.put(key, newNode);
-            addNode(newNode);
-            currentSize++;
-            if(currentSize > capacity) {
-                DNode tail = popTail();
-                cacheMap.remove(tail.key);
-                currentSize--;
-            }
+            node.value = value;
+            moveToHead(node);
         }
-        
     }
-    
-    private DNode popTail() {
-        DNode res = tail.prev;
-        removeNode(res);
-        return res;
-    }
-    
-    private void moveToHead(DNode node) {
-        removeNode(node);
-        addNode(node);
-    }
-    
-    private void addNode(DNode node) {
+
+    private void addToHead(DNode node) {
         node.prev = head;
         node.next = head.next;
-        
         head.next.prev = node;
         head.next = node;
     }
-    
-    private void removeNode(DNode node) {
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
+        
+        
+    private void removeTail() {
+        DNode nodeToRemove = tail.prev;
+        removeNode(nodeToRemove);
+    }
+        
+    private void moveToHead(DNode node) {
+        removeNode(node);
+        addToHead(node);
     }
     
-    
-    
-    
-    
-}
-
-class DNode {
-    int val;
-    int key;
-    DNode prev;
-    DNode next;
+    private void removeNode(DNode node) {
+        DNode prev = node.prev;
+        DNode next = node.next;
+        
+        prev.next = next;
+        next.prev = prev;
+    }
+        
+           
+    static class DNode {
+        DNode next;
+        DNode prev;
+        int value;
+        int key;
+    }
 }
 
 /**
@@ -91,3 +92,4 @@ class DNode {
  * int param_1 = obj.get(key);
  * obj.put(key,value);
  */
+
