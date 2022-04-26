@@ -3,7 +3,7 @@
 
 class MyHashMap {
     private int[] map;
-    private static int HASH_KEY_SIZE = 1000;
+    private static int HASH_KEY_SIZE = 2000;
     List<Bucket> buckets;
     
     public MyHashMap() {
