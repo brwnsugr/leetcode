@@ -16,15 +16,17 @@ class Solution {
             countMap.put(num, countMap.get(num) + 1);
         }
         
-        for(Map.Entry<Integer,Integer> entry : countMap.entrySet()) {
-            list.add(new int[]{entry.getValue(), entry.getKey()});
+        Queue<Integer> pq = new PriorityQueue<>((n1, n2) -> countMap.get(n1) - countMap.get(n2));
+        
+        for(int key : countMap.keySet()) {
+            pq.add(key);
+            if(pq.size() > k) {
+                pq.poll();
+            }
         }
-        
-        Collections.sort(list, (int[] t1, int[] t2) -> {return t2[0]- t1[0];});
-        
         int[] ans = new int[k];
         for(int i = 0; i < k; i++) {
-            ans[i] = list.get(i)[1];
+            ans[i] = pq.poll();
         }
         return ans;
     }
