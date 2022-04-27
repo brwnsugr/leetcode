@@ -1,43 +1,32 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
-
 class Solution {
-  public int[] topKFrequent(int[] nums, int k) {
-    Map<Integer, Integer> m = new HashMap<>();
-
-    for(int num : nums) {
-      if(!m.containsKey(num)) m.put(num, 1);
-      else m.put(num, m.get(num) + 1);
+    public int[] topKFrequent(int[] nums, int k) {
+        // 1: 3, 2:2, 3:1 -> 
+        // 3 -> [1].    2->[2], 1 -> [3]
+        
+        //[1, 3], [2, 2], [3, 1]
+        
+        List<int[]> list = new ArrayList<>();
+        
+        Map<Integer, Integer> countMap = new HashMap<>();
+        
+        for(int num : nums) {
+            if(!countMap.containsKey(num)) {
+                countMap.put(num, 0);
+            }
+            countMap.put(num, countMap.get(num) + 1);
+        }
+        
+        for(Map.Entry<Integer,Integer> entry : countMap.entrySet()) {
+            list.add(new int[]{entry.getValue(), entry.getKey()});
+        }
+        
+        Collections.sort(list, (int[] t1, int[] t2) -> {return t2[0]- t1[0];});
+        
+        int[] ans = new int[k];
+        for(int i = 0; i < k; i++) {
+            ans[i] = list.get(i)[1];
+        }
+        return ans;
     }
-
-    Set<Entry<Integer, Integer>> entries = m.entrySet();
-
-    SortedMap<Integer, List<Integer>> sortedMap = new TreeMap<>((s1, s2) -> s2 - s1);
-    for(Entry<Integer,Integer> entry : entries) {
-      if(sortedMap.containsKey(entry.getValue())) {
-        sortedMap.get(entry.getValue()).add(entry.getKey());
-      }
-      else {
-        sortedMap.put(entry.getValue(), new ArrayList<>());
-        sortedMap.get(entry.getValue()).add(entry.getKey());
-      }
-    }
-    int i = 0;
-    int[] ans = new int[k];
-
-    for(Entry<Integer,List<Integer>> entry : sortedMap.entrySet()) {
-      List<Integer> values = entry.getValue();
-      for(int value : values) {
-        ans[i] = value;
-        i++;
-        if(i == k) break;
-      }
-      if(i == k) break;
-    }
-    return ans;
-  }
+    
 }
