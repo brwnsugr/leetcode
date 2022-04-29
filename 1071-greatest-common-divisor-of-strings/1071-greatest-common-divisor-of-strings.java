@@ -4,7 +4,6 @@ class Solution {
         String reverseConcatStr = str2 + str1;
         if(!concatStr.equals(reverseConcatStr)) return "";
         int gcd = getGCD(str1.length(), str2.length());
-        System.out.println("gcd is " + gcd);
         return str1.substring(0, gcd);
     }
     
