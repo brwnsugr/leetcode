@@ -1,36 +1,52 @@
 class Solution {
-  public boolean canFinish(int numCourses, int[][] prerequisites) {
-    List<List<Integer>> adjList = new ArrayList<>(numCourses);
-    int[] inflowCount = new int[numCourses];
-    if(prerequisites.length == 0) return true;
-    for(int i = 0; i < numCourses; i++) {
-      adjList.add(new ArrayList<>());
+    
+    Set<Integer> courseLearned = new HashSet<>();
+    private Map<Integer, List<Integer>> adjMap = new HashMap<>();
+    private boolean canFinish;
+    
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        canFinish = true;
+        //init 
+        for(int[] prerequisite : prerequisites) {
+            int start = prerequisite[0];
+            int end = prerequisite[1];
+            if(!adjMap.containsKey(start)) {
+                adjMap.put(start, new ArrayList<>());
+            }
+            if(!adjMap.containsKey(end)) {
+                adjMap.put(end, new ArrayList<>());
+            }
+            adjMap.get(start).add(end);
+        }
+        
+        Set<Integer> currentLearned = new HashSet<>();
+        for(int i = 0; i < numCourses; i++) {
+            int startCourse = i;
+            dfs(startCourse, currentLearned);
+            if(!canFinish) return false;
+        }
+        return canFinish;
     }
-
-    for(int[] prerequisite : prerequisites) {
-      adjList.get(prerequisite[1]).add(prerequisite[0]);
-      inflowCount[prerequisite[0]]++;
+    // 1->4, 2->4, 3->1 3->2
+    
+    private void dfs(int currentCourse, Set<Integer> currentLearned) {
+        
+        if(courseLearned.contains(currentCourse)) {
+            return;
+        }
+        if(currentLearned.contains(currentCourse)) {
+            canFinish = false;
+            return;
+        }
+        List<Integer> nextCourses = adjMap.get(currentCourse);
+        if(nextCourses == null) return;
+        currentLearned.add(currentCourse);
+        for(int nextCourse : nextCourses) {
+            dfs(nextCourse, currentLearned);
+        }
+        currentLearned.remove(currentCourse);
+        
+        courseLearned.add(currentCourse);
+        return;
     }
-
-    Queue<Integer> q = new LinkedList<>();
-    for(int i = 0; i < numCourses; i++) {
-      if(inflowCount[i] == 0) q.add(i);
-    }
-
-    if(q.isEmpty()) return false;
-
-    while(!q.isEmpty()) {
-      int curr = q.poll();
-      List<Integer> nextSteps = adjList.get(curr);
-      for(int next : nextSteps) {
-        inflowCount[next]--;
-        if(inflowCount[next] == 0) q.add(next);
-      }
-    }
-    int cnt = 0;
-    for(int i = 0; i < numCourses; i++){
-      if(inflowCount[i] == 0) cnt++;
-    }
-    return numCourses == cnt;
-  }
 }
