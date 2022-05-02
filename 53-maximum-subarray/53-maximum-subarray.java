@@ -1,12 +1,14 @@
 class Solution {
-  public int maxSubArray(int[] nums) {
-    int ans = Integer.MIN_VALUE;
-    int subSum = 0;
-    for(int i = 0; i < nums.length; i++) {
-      subSum += nums[i];
-      ans = Math.max(ans, subSum);
-      if(subSum < 0) subSum = 0;
+    public int maxSubArray(int[] nums) {
+        //O(N^2)
+        int answer = Integer.MIN_VALUE;
+        int sum = 0; // [1,-2,3]
+        for(int i = 0; i < nums.length; i++) {
+            sum += nums[i]; 
+            answer = Math.max(answer, sum);
+            if(sum < 0) sum = 0;
+            
+        }
+        return answer;
     }
-    return ans;
-  }
 }
