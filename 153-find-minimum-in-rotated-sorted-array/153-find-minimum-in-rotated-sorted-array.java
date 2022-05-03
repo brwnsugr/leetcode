@@ -21,7 +21,7 @@ class Solution {
             }
         }
         
-        return answer;
+        return nums[l];
     
     }
 }
