@@ -1,20 +1,19 @@
 class Solution {
     public int maxProfit(int[] prices) {
-        //iterating the array, from the left to end
-        // while going through, update minimum buying price
-        // and check the diff currentPrice that we're at - minimum buying price
-        // then maximum of diff would be the answer
-        if(prices.length == 1) return 0;
-        int answer = 0;
-        int minBuyPrice = prices[0];
+        //dp[i][0] : til i-1 idx, max profit holding stock
+        //dp[i][1] : til i-1 idx, max profit not holding stock
+        
+        //dp[i][1] =Math.max(dp[i-1][1], dp[i-1][0] + prices[i]);
+        
+        int[][] dp = new int[prices.length+1][2];
+        
+        dp[0][0] = -prices[0];
+        dp[0][1] = 0;
+        
         for(int i = 1; i < prices.length; i++) {
-            int currPrice = prices[i];
-            int profit = currPrice - minBuyPrice;
-            answer = Math.max(profit, answer);
-            minBuyPrice = Math.min(currPrice, minBuyPrice);
+            dp[i][0] = Math.max(dp[i-1][0], -prices[i]);
+            dp[i][1] = Math.max(dp[i-1][1], dp[i-1][0] + prices[i]);
         }
-        
-        
-        return answer;
+        return dp[prices.length-1][1];
     }
 }
