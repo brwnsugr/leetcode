@@ -1,34 +1,28 @@
 class Solution {
-    // Set<String> dict;
-    
-    Boolean[] cache;
     public boolean wordBreak(String s, List<String> wordDict) {
+        // "************* "
         
-        cache = new Boolean[s.length()];
-
-        return isValid(s, 0, new HashSet<>(wordDict));
-    }
-    
-    private boolean isValid(String s, int startIdx, Set<String> dict) {
-        if(startIdx == s.length()) {
-            return true;
-        }
-        if (cache[startIdx] != null) return cache[startIdx];
-        for(int start = startIdx+1; start <= s.length(); start++) {
-            String subStr = s.substring(startIdx, start); // s.substring(3,4)
-            // leet/code ,[leet, code]
-            if(dict.contains(subStr) && isValid(s, start, dict)) { // subStr = t
-                cache[startIdx] = true;
-                return true;
+        // dp[i] : at ith idx, return true
+        // dp[i] = true if dp[i-word.length] && word.substring(i-word.len, i+1) contains in wordDict
+        
+        boolean[] dp = new boolean[s.length() + 1];
+        
+        dp[0] = true;
+        
+        
+        Set<String> wordSet = new HashSet<>(wordDict);
+        
+        
+        for(int i = 0; i <= s.length(); i++) {
+            for(String word : wordDict) {
+                int wordLen = word.length();
+                if(i - wordLen >= 0) {
+                    if(dp[i-wordLen] && wordSet.contains(s.substring(i-wordLen , i))){
+                        dp[i] = true;
+                    }
+                }
             }
         }
-        cache[startIdx] = false;
-        return false;
+        return dp[s.length()];
     }
-    
-    
-    
-    
-    
-    
 }
