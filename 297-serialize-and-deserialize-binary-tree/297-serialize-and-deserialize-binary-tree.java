@@ -17,8 +17,8 @@ public class Codec {
         q.add(root);
         
         while(!q.isEmpty()) {
-            int qSize = q.size();
-            for(int i = 0; i < qSize; i++) {
+            // int qSize = q.size();
+            // for(int i = 0; i < qSize; i++) {
                 TreeNode currNode = q.poll();
                 Integer currVal = currNode == null ? null : currNode.val;
                 arr.add(currVal);
@@ -27,7 +27,7 @@ public class Codec {
                     q.add(currNode.left);
                     q.add(currNode.right);
                 }
-            }
+            // }
         }
         return arr.toString();
     }
@@ -52,7 +52,6 @@ public class Codec {
         int index = 1;
         
         while(index < arr.length && !q.isEmpty()) {
-            
             TreeNode curr = q.poll();
             if(list.get(index) != null && index < arr.length) {
                 TreeNode left = new TreeNode(list.get(index));
