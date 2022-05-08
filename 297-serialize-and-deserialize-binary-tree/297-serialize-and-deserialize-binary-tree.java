@@ -9,59 +9,66 @@
  */
 public class Codec {
 
-  public String serialize(TreeNode root) {
-    Queue<TreeNode> q = new LinkedList<>();
-    List<Integer> arr = new ArrayList<>();
-    q.add(root);
-    while(!q.isEmpty()) {
-      for(int i = 0; i < q.size(); i++) {
-        TreeNode curr = q.poll();
-        Integer value = curr == null ? null : curr.val;
-        arr.add(value);
-        if(curr != null) {
-          q.add(curr.left);
-          q.add(curr.right);
+    // Encodes a tree to a single string.
+    public String serialize(TreeNode root) {
+        List<Integer> arr = new ArrayList<>();
+        Queue<TreeNode> q = new LinkedList<>();
+        
+        q.add(root);
+        
+        while(!q.isEmpty()) {
+            int qSize = q.size();
+            for(int i = 0; i < qSize; i++) {
+                TreeNode currNode = q.poll();
+                Integer currVal = currNode == null ? null : currNode.val;
+                arr.add(currVal);
+                
+                if(currNode != null) {
+                    q.add(currNode.left);
+                    q.add(currNode.right);
+                }
+            }
         }
-      }
-    }
-    return arr.toString();
-  }
-
-  // Decodes your encoded data to tree.
-  public TreeNode deserialize(String data) {
-    data = data.substring(1, data.length()-1);
-    String[] split = data.split(", ");
-    List<Integer> arr = new ArrayList<>(split.length);
-    for(String element : split) {
-      if(element.equals("null")) arr.add(null);
-      else arr.add(Integer.valueOf(element));
+        return arr.toString();
     }
 
-    if(arr.size() == 0 || arr.get(0)==null) return null;
-    TreeNode root = new TreeNode(Integer.valueOf(arr.get(0)));
-    Queue<TreeNode> q = new LinkedList<>();
-    q.add(root);
-    
-    int count = 1;
-    while(!q.isEmpty() && count < arr.size()) {
-      TreeNode curr = q.poll();
+    // Decodes your encoded data to tree.
+    public TreeNode deserialize(String data) {
+        data = data.substring(1, data.length() -1);
+        
+        String[] arr = data.split(", ");
+        if(arr.length == 0 || arr[0].equals("null")) return null;
+        List<Integer> list = new ArrayList<>();
+        for(String item : arr) {
+            if(item.equals("null")) list.add(null);
+            else list.add(Integer.valueOf(item));
+        }
+        
+        TreeNode root = new TreeNode(Integer.valueOf(list.get(0)));
 
-      if(arr.get(count) != null) {
-        TreeNode left = new TreeNode(arr.get(count));
-        curr.left = left;
-        q.add(left);
-      }
-      count++;
-      if(count >= arr.size()) break;
-      if(arr.get(count) != null) {
-        TreeNode right = new TreeNode(arr.get(count));
-        curr.right = right;
-        q.add(right);
-      }
-      count++;
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
+        
+        int index = 1;
+        
+        while(index < arr.length && !q.isEmpty()) {
+            
+            TreeNode curr = q.poll();
+            if(list.get(index) != null && index < arr.length) {
+                TreeNode left = new TreeNode(list.get(index));
+                curr.left = left;
+                q.add(left);
+            }
+            index++;
+            if(list.get(index) != null && index < arr.length) {
+                TreeNode right = new TreeNode(list.get(index));
+                curr.right = right;
+                q.add(right);
+            }
+            index++;
+        }
+        return root;
     }
-    return root;
-  }
 }
 
 // Your Codec object will be instantiated and called as such:
