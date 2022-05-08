@@ -14,37 +14,27 @@
  * }
  */
 class Solution {
-    TreeNode curr;
-    TreeNode newCurr;
-    private List<Integer> orders = new ArrayList<>();
-    private int order = 0;
-    
     public void flatten(TreeNode root) {
-        if(root == null) return;
-        curr = root;
-        preOrder(curr);
-        curr = root;
-        recursiveFlatten(curr);
-        return;
+        getFlattenedTail(root);
     }
     
-    private void recursiveFlatten(TreeNode curr) {
-        if(order == orders.size()-1) {
-            curr.val = orders.get(order);
-            return;
-        }
-        if(curr.right == null) curr.right = new TreeNode();
-        curr.val = orders.get(order);
-        order++;
-        curr.left = null;
-        recursiveFlatten(curr.right);
-    }
-    
-    private void preOrder(TreeNode curr) {
-        if(curr == null) return;
-        orders.add(curr.val);
-        preOrder(curr.left);
-        preOrder(curr.right);
+    private TreeNode getFlattenedTail(TreeNode root) {
         
+        
+        if(root == null) return null;
+        if(root.left == null && root.right == null) {
+            return root;
+        }
+        
+        TreeNode leftTail = getFlattenedTail(root.left);
+        TreeNode rightTail = getFlattenedTail(root.right);
+        
+        if(leftTail != null) {
+            leftTail.right = root.right;
+            root.right = root.left;
+            root.left = null;
+        }
+        
+        return rightTail == null ? leftTail : rightTail;
     }
 }
