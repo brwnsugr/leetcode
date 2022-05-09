@@ -16,22 +16,20 @@
 class Solution {
     public void flatten(TreeNode root) {
         getFlattenedTail(root);
+        
     }
     
     private TreeNode getFlattenedTail(TreeNode root) {
-        
-        
         if(root == null) return null;
-        if(root.left == null && root.right == null) {
-            return root;
-        }
+        if(root.right == null && root.left == null) return root;
         
         TreeNode leftTail = getFlattenedTail(root.left);
         TreeNode rightTail = getFlattenedTail(root.right);
         
         if(leftTail != null) {
+            //append right node to leftTail
             leftTail.right = root.right;
-            root.right = root.left;
+            root.right = root.left; 
             root.left = null;
         }
         
