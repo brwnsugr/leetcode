@@ -10,17 +10,20 @@
  */
 class Solution {
     public ListNode reverseList(ListNode head) {
-        ListNode curr = head;
-        ListNode prev = null;
+        return getReversedList(head);
+    }
+    
+    private ListNode getReversedList(ListNode curr) {
         
-        while(curr != null) {
-            ListNode nextTemp = curr.next;
-            curr.next = prev;
-            
-            prev = curr;
-            curr = nextTemp;
-        }
+        if(curr == null || curr.next == null) return curr;
+        // 1->null;
+        // 1->2->null  => 2->^1->null
+        ListNode p = getReversedList(curr.next);
+        curr.next.next = curr;
+        curr.next = null;
         
-        return prev;
+        // switch adj
+        // 1<-2->3 ->... ->
+        return p;
     }
 }
