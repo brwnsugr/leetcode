@@ -15,12 +15,18 @@ class Solution {
         //.   
         // ListNode 
         //
+        //p   1->2->3->null
+        //n <-c  t
+        //    p
+        //
+        //. 
+        //
         
         ListNode prev = null;
         
         ListNode curr = head;
         
-        while(curr != null) {
+        while(curr!=null) {
             ListNode nextTemp = curr.next;
             curr.next = prev;
             
@@ -29,6 +35,6 @@ class Solution {
         }
         
         return prev;
-        
+    
     }
 }
