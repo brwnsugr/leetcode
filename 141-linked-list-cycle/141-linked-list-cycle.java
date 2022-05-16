@@ -10,33 +10,15 @@
  * }
  */
 public class Solution {
-    
-    Set<ListNode> s = new HashSet<>();
     public boolean hasCycle(ListNode head) {
-        // try to traverse the listnode from head, 
-        // and find the node that we already traversed, then compare the pos and this node. 
-        // if position = node -> true, or else return false;
+        Set<ListNode> visited = new HashSet<>();
         
-        // using hashset we can address. -> put the nodes while traversing, 
-        // and check if contains
-        
-        // 3->2->0->4 :  hashSet: [3, 2* compare with the pos, 0, 4]
-        //.   |-----|
-        
-        // 3(0) -> 2(1)
-        
-        if(head == null) return false;
-        
-        ListNode curr = head;
-        
-        while(curr!=null) {
-            if(s.contains(curr)) return true;
-            else {
-                s.add(curr);
-            }
-            curr = curr.next;
+        while(head != null) {
+            if(visited.contains(head)) return true;
+            visited.add(head);
+            head = head.next;
         }
+        
         return false;
     }
-    
 }
