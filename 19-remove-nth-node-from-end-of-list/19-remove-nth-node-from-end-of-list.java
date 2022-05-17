@@ -10,28 +10,29 @@
  */
 class Solution {
     public ListNode removeNthFromEnd(ListNode head, int n) {
+        // D->1->2->3->N (D는 Dummy node,  N은 null pointer)
+        //             F
+        //    S --->3
+        //
+        // return D.next
         
-        // 2 pass
-        int len = 0; 
         ListNode dummy = new ListNode(0);
         dummy.next = head;
-        ListNode curr = head;
         
-        while(curr != null) {
-            len++;
-            curr = curr.next;
+        ListNode first = dummy;
+        ListNode second = dummy;
+        
+        for(int i = 0; i < n+1; i++){
+            first = first.next;
         }
         
-        int steps = len - n;
-        ListNode ret = dummy;
-        while(steps > 0) {
-            dummy = dummy.next;
-            steps--;
+        while(first != null) {
+            first = first.next;
+            second = second.next;
         }
         
-        dummy.next = dummy.next.next;
+        second.next = second.next.next;
         
-    
-        return ret.next;
+        return dummy.next;
     }
 }
