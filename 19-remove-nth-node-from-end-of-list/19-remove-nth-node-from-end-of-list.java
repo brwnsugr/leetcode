@@ -10,30 +10,28 @@
  */
 class Solution {
     public ListNode removeNthFromEnd(ListNode head, int n) {
-        //Naive approach 
         
-        // O(M + M - N) M: size linkedlist element, N = n
-        ListNode dummy = head;
-        int size = 0;
-        while(dummy != null) {
-            dummy = dummy.next;
-            size++;
+        // 2 pass
+        int len = 0; 
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode curr = head;
+        
+        while(curr != null) {
+            len++;
+            curr = curr.next;
         }
         
-        int aheadSize = size - n;
-        
-        dummy = new ListNode(0, head);
-        ListNode res = dummy;
-        int count = 0;
-        while(dummy != null) {
-            if(aheadSize == count) {
-                //remove next
-                dummy.next = dummy.next.next;
-                break;
-            }
+        int steps = len - n;
+        ListNode ret = dummy;
+        while(steps > 0) {
             dummy = dummy.next;
-            count++;
+            steps--;
         }
-        return res.next;
+        
+        dummy.next = dummy.next.next;
+        
+    
+        return ret.next;
     }
 }
