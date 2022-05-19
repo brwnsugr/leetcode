@@ -62,7 +62,6 @@ class Solution {
         for(String synonym : synonyms) {
             textArr[replaceIdx] = synonym;
             backTrack(idx+1, replaceIdxList, clusteredMap, textArr);
-            System.out.println(synonym);
             textArr[replaceIdx] = str;
         }
     }
