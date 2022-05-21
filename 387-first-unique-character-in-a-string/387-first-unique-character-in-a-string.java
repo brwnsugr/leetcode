@@ -1,22 +1,22 @@
 class Solution {
-  public int firstUniqChar(String s) {
-    Set<Character> alreadyRemovedSet = new HashSet<>();
-    Set<Character> charSet = new HashSet<>();
-    
-    for(int i = 0; i < s.length(); i++) {
-      if(!alreadyRemovedSet.contains(s.charAt(i)) 
-          && !charSet.contains(s.charAt(i))) {
-        charSet.add(s.charAt(i));
-      }
-      else if(charSet.contains(s.charAt(i))) {
-        alreadyRemovedSet.add(s.charAt(i));
-        charSet.remove(s.charAt(i));
-      }
+    public int firstUniqChar(String s) {
+        // 
+        //twoTimes = [e]
+        
+        Set<Character> twoTimes = new HashSet<>();
+        
+        int[] counts = new int[26];
+        for(char c : s.toCharArray()) {
+            counts[c-'a']++;
+            if(counts[c-'a'] > 1) twoTimes.add(c);
+        }
+        
+        
+        for(int i = 0; i < s.length(); i++) {
+            char curr = s.charAt(i);
+            if(counts[curr-'a'] == 1) return i;
+        }
+        
+        return -1;
     }
-    
-    for(int i = 0; i < s.length(); i++) {
-      if(charSet.contains(s.charAt(i))) return i;
-    }
-    return -1;
-  }
 }
