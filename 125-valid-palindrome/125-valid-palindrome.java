@@ -3,8 +3,8 @@ class Solution {
         StringBuilder strBuilder = new StringBuilder();
         s = s.toLowerCase();
         for(int i = 0; i < s.length(); i++) {
-            if(Character.isLetter(s.charAt(i)) || Character.isDigit(s.charAt(i))) {
-                strBuilder.append(s.charAt(i));
+            if(Character.isLetterOrDigit(s.charAt(i))) {
+                strBuilder.append(Character.toLowerCase(s.charAt(i)));
             }
         }
         
@@ -14,9 +14,7 @@ class Solution {
         int r = s.length() - 1;
         
         while(l < r) {
-            char leftCh = s.charAt(l);
-            char rightCh = s.charAt(r);
-            if(leftCh != rightCh) return false;
+            if(s.charAt(l) != s.charAt(r)) return false;
             l++; r--;
         }
         
