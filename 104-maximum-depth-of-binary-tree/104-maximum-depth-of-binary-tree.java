@@ -14,30 +14,31 @@
  * }
  */
 class Solution {
-    private int answer = 0;
     
+    
+    private int answer = 0;
     public int maxDepth(TreeNode root) {
-        // leaf 까지-> max depth 를 갱신 
-        if(root == null) return answer;
-        updateMaxDepth(root, 1);     //     
+        
+        
+        if(root == null) return 0;
+        
+        reachToLeaf(root, 1);
         return answer;
         
-        
-        //              3
-        //             9 20     d = 3
-        //            2^
     }
     
-    private void updateMaxDepth(TreeNode root, int depth) {
-        // when we reach out to leaf node
-        if(root.left == null && root.right == null) {
+    private void reachToLeaf(TreeNode root, int depth) {
+        if(root.right == null && root.left == null) {
             answer = Math.max(depth, answer);
             return;
         }
         
-        //recursive left
-        if(root.left!= null) updateMaxDepth(root.left, depth + 1);
-        // right
-        if(root.right != null) updateMaxDepth(root.right, depth + 1);
-    }
+        else {
+            if(root.left != null) reachToLeaf(root.left, depth+1);
+            if(root.right != null) reachToLeaf(root.right, depth+1);
+        }
+        
+    } 
+    
+    
 }
