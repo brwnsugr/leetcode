@@ -16,15 +16,12 @@
 class Solution {
 
     public int maxDepth(TreeNode root) {
-        return getMaxHeight(root);
-    }
-        
-    private int getMaxHeight(TreeNode root) {
         if(root == null) return 0;    
-        int leftMax = getMaxHeight(root.left) + 1;
-        int rightMax = getMaxHeight(root.right) + 1;
+        int leftMax = maxDepth(root.left) + 1;
+        int rightMax = maxDepth(root.right) + 1;
         return Math.max(leftMax, rightMax);
     }
+        
     
     
 }
