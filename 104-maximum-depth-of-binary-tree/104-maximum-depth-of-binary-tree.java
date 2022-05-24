@@ -14,31 +14,17 @@
  * }
  */
 class Solution {
-    
-    
-    private int answer = 0;
+
     public int maxDepth(TreeNode root) {
-        
-        
-        if(root == null) return 0;
-        
-        reachToLeaf(root, 1);
-        return answer;
-        
+        return getMaxHeight(root);
     }
-    
-    private void reachToLeaf(TreeNode root, int depth) {
-        if(root.right == null && root.left == null) {
-            answer = Math.max(depth, answer);
-            return;
-        }
         
-        else {
-            if(root.left != null) reachToLeaf(root.left, depth+1);
-            if(root.right != null) reachToLeaf(root.right, depth+1);
-        }
-        
-    } 
+    private int getMaxHeight(TreeNode root) {
+        if(root == null) return 0;    
+        int leftMax = getMaxHeight(root.left) + 1;
+        int rightMax = getMaxHeight(root.right) + 1;
+        return Math.max(leftMax, rightMax);
+    }
     
     
 }
