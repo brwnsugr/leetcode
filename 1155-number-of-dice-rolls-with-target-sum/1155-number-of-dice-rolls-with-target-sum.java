@@ -10,7 +10,7 @@ class Solution {
             for(int targetVal = 1; targetVal <= target; targetVal++) {
                 for(int currVal = 1; currVal <= k; currVal++) {
                     if(targetVal >= currVal) {
-                        dp[dice][targetVal] = dp[dice][targetVal] + dp[dice-1][targetVal - currVal];
+                        dp[dice][targetVal] += dp[dice-1][targetVal - currVal];
                         dp[dice][targetVal] %= mod;
                     }
                 }
