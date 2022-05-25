@@ -34,10 +34,10 @@ class Solution {
         if(root.left == null && root.right == null && tempSum == target) {
             answers.add(new ArrayList<>(path));
         }
-        else {
-            recursive(root.left, path, tempSum);
-            recursive(root.right, path, tempSum);
-        }
+        // else {
+        recursive(root.left, path, tempSum);
+        recursive(root.right, path, tempSum);
+        // }
         path.removeLast();
         tempSum -= root.val;
             
