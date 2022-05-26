@@ -32,5 +32,6 @@ class Solution {
             preOrder(left, sum);
             preOrder(right, sum);
         }
+        sum -= treeMap.get(root);
     }
 }
