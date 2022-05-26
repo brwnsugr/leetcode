@@ -14,21 +14,20 @@
  * }
  */
 class Solution {
-    
     public TreeNode invertTree(TreeNode root) {
-        recursive(root);
-        return root;
+        TreeNode dummy = root;
+        
+        invertPair(root);
+        return dummy;
     }
     
-    private void recursive(TreeNode curr) {
-        if(curr == null) return;
-        TreeNode left = curr.left;
-        curr.left = curr.right;
-        curr.right = left;
-        recursive(curr.left);
-        recursive(curr.right);
-        return;
+    private void invertPair(TreeNode root) {
+        if(root == null) return;
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+        
+        invertPair(root.left);
+        invertPair(root.right);
     }
-    
-
 }
