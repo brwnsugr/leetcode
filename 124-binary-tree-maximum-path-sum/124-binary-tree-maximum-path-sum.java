@@ -15,21 +15,24 @@
  */
 class Solution {
     
-    int answer = Integer.MIN_VALUE;
+    private int answer = Integer.MIN_VALUE;
     
     public int maxPathSum(TreeNode root) {
-        recursive(root);
+        
+        getMaxLength(root);
         return answer;
     }
     
-    private int recursive(TreeNode curr) {
-        if(curr == null) return 0;
+    private int getMaxLength(TreeNode root) {
+        if(root == null) return 0;
         
-        int leftGain = Math.max(recursive(curr.left), 0);
-        int rightGain = Math.max(recursive(curr.right), 0);
-    
-        int newPathSum = curr.val + leftGain + rightGain;
-        answer = Math.max(newPathSum, answer);    
-        return curr.val + Math.max(leftGain, rightGain);
+        int leftMax = Math.max(0, getMaxLength(root.left));
+        int rightMax = Math.max(0, getMaxLength(root.right));
+        
+        int maxLength = root.val + leftMax + rightMax;
+        
+        answer = Math.max(answer, maxLength);
+        
+        return root.val + Math.max(leftMax, rightMax);
     }
 }
