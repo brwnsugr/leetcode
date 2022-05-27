@@ -9,38 +9,25 @@
  */
 
 class Solution {
-    private TreeNode commonAncestor = null;
-    private int pVal;
-    private int qVal;
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        pVal = p.val;
-        qVal = q.val;
+        // TreeNode root = root;
         
-        preOrder(root);
-        
-        return commonAncestor;
+        while(root != null) {
+            int pVal = p.val;
+            int qVal = q.val;
+            
+            if(pVal < root.val && qVal < root.val) {
+                root = root.left;
+            }
+            else if(pVal > root.val && qVal > root.val) {
+                root = root.right;
+            }
+            else {
+                return root;
+            }
+        }
+        return null;
     }
     
-    private void preOrder(TreeNode root) {
-        //       4 
-        //     2  5
-        //   1  3
-        //
-        //
-        if(root == null) return;
-        else if(root.val == pVal || root.val == qVal) {
-            commonAncestor = root;
-            return;
-        }
-        else if( (root.val > pVal && root.val < qVal)
-               || (root.val > qVal && root.val < pVal)) {
-            commonAncestor = root;
-            return;
-        }
-        
-        else {
-            preOrder(root.left);
-            preOrder(root.right);
-        }
-    }
+    
 }
