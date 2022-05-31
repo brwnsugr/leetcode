@@ -8,45 +8,47 @@
  * }
  */
 class Solution {
-
-  List<TreeNode> qTrace = new ArrayList<>();
-  Set<Integer> pTraceSet = new HashSet<>();
-
-  public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-    List<TreeNode> trace = new ArrayList<>();
-    TreeNode commonAncestor = null;
-    trace.add(root);
-    dfs(root, p, q, trace);
-    for(int k = qTrace.size()-1; k>=0; k--) {
-      if(pTraceSet.contains(qTrace.get(k).val)) {
-        commonAncestor = qTrace.get(k); break;
-      }
+    private int foundCount;
+    private boolean allFound;
+    private List<Integer> pathP = new ArrayList<>();
+    private List<Integer> pathQ = new ArrayList<>();
+    public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+        foundCount = 0;
+        allFound = false;
+        TreeNode curr = root;
+        findNode(curr, p, new ArrayList<>(), pathP);
+        findNode(curr, q, new ArrayList<>(), pathQ);
+        
+        Set<Integer> pVisit = new HashSet<>(pathP);
+        int ancestorValue = 0;
+        for(int i = pathQ.size() - 1; i >= 0; i--) {
+            int qItem = pathQ.get(i);
+            if(pVisit.contains(qItem)){
+                ancestorValue = qItem;
+                break;
+            }
+        }
+        return getNodeByVal(curr, ancestorValue);
     }
-    return commonAncestor;
-  }
-
-  private void dfs(TreeNode currNode, TreeNode p, TreeNode q, List<TreeNode> trace) {
-    if(!qTrace.isEmpty() && !pTraceSet.isEmpty()) return;
-    else if(currNode.val == p.val) {
-      for(TreeNode node : trace) {
-        pTraceSet.add(node.val);
-      }
+    
+    private TreeNode getNodeByVal(TreeNode curr, int value) {
+        if(curr == null) return null;
+        if(curr.val == value) return curr;
+        TreeNode leftNodeToReturn = getNodeByVal(curr.left, value);
+        TreeNode rightNodeToReturn = getNodeByVal(curr.right, value);
+        if(leftNodeToReturn != null) return leftNodeToReturn;
+        else return rightNodeToReturn;
     }
-    else if(currNode.val == q.val) {
-      qTrace = List.copyOf(trace);
+    
+    private void findNode(TreeNode curr, TreeNode target, List<Integer> tempPath, List<Integer> path) {
+        if(curr == null) return;
+        tempPath.add(curr.val);
+        if(curr.val == target.val) {
+            path.addAll(tempPath);
+            return;
+        }
+        findNode(curr.left, target, tempPath, path);
+        findNode(curr.right, target, tempPath, path);
+        tempPath.remove(tempPath.size() - 1);
     }
-
-    if(currNode.left != null) {
-      trace.add(currNode.left);
-      dfs(currNode.left, p, q, trace);
-      trace.remove(trace.size()-1);
-    }
-
-    if(currNode.right != null) {
-      trace.add(currNode.right);
-      dfs(currNode.right, p, q, trace);
-      trace.remove(trace.size()-1);
-    }
-    return;
-  }
 }
