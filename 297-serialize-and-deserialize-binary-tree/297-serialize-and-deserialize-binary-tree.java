@@ -8,48 +8,63 @@
  * }
  */
 public class Codec {
-
     // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
-        return dfs(root, "");
+        List<Integer> arr = new ArrayList<>();
+        Queue<TreeNode> q = new LinkedList<>();
+        
+        q.add(root);
+        
+        while(!q.isEmpty()) {
+            TreeNode currNode = q.poll();
+            Integer currVal = currNode == null ? null : currNode.val;
+            arr.add(currVal);
+                
+            if(currNode != null) {
+                q.add(currNode.left);
+                q.add(currNode.right);
+            }
+        }
+        return arr.toString();
     }
-    
-    private String dfs(TreeNode root, String str) {
-        if(root == null) {
-            str+="null,";
-        }
-        else {
-            str += String.valueOf(root.val) + ",";
-            str = dfs(root.left, str);
-            str = dfs(root.right, str);
-        }
-        return str;
-    } 
 
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
-        String[] dataArr = data.split(",");
-        List<String> dataList = new LinkedList<>(Arrays.asList(dataArr));
-        return deserializeHelper(dataList);
-    }
-    
-    private TreeNode deserializeHelper(List<String> dataList) {
-        if(dataList.get(0).equals("null")) {
-            dataList.remove(0);
-            return null;
+        data = data.substring(1, data.length() -1);
+        
+        String[] arr = data.split(", ");
+        if(arr.length == 0 || arr[0].equals("null")) return null;
+        List<Integer> list = new ArrayList<>();
+        for(String item : arr) {
+            if(item.equals("null")) list.add(null);
+            else list.add(Integer.valueOf(item));
         }
         
-        int currRootVal = Integer.valueOf(dataList.get(0));
-        TreeNode root = new TreeNode(currRootVal);
-        dataList.remove(0);
-        root.left = deserializeHelper(dataList);
-        root.right = deserializeHelper(dataList);
+        TreeNode root = new TreeNode(Integer.valueOf(list.get(0)));
+
+        Queue<TreeNode> q = new LinkedList<>();
+        q.add(root);
         
+        int index = 1;
         
+        while(index < arr.length && !q.isEmpty()) {
+            
+            TreeNode curr = q.poll();
+            if(list.get(index) != null && index < arr.length) {
+                TreeNode left = new TreeNode(list.get(index));
+                curr.left = left;
+                q.add(left);
+            }
+            index++;
+            if(list.get(index) != null && index < arr.length) {
+                TreeNode right = new TreeNode(list.get(index));
+                curr.right = right;
+                q.add(right);
+            }
+            index++;
+        }
         return root;
     }
-    
-    // private 
 }
 
 // Your Codec object will be instantiated and called as such:
