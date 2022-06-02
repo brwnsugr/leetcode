@@ -14,20 +14,28 @@
  * }
  */
 class Solution {
-    private TreeNode root;
+    
     private int preOrderIdx = 0;
-    private Map<Integer, Integer> inOrderIdxMap = new HashMap<>();
+    Map<Integer, Integer> inorderIdxMap = new HashMap<>();
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        for(int i = 0; i < inorder.length; i++) inOrderIdxMap.put(inorder[i], i);
-        return arrToTree(preorder, 0, preorder.length - 1);
+        // preOrder elements are sorted by root, left subtree's root, right subtree's root
+        // pick item of preorder list -
+        // inorder = (9)L,3*,(15,20,7)R
+        // TC: O(N) , SC: O(N)
+        for(int i = 0; i < inorder.length; i++) {
+            inorderIdxMap.put(inorder[i], i);
+        }
+        return buildTree(preorder, 0, preorder.length - 1);
     }
     
-    private TreeNode arrToTree(int[] preorder, int left, int right) {
+    private TreeNode buildTree(int[] preorder, int left, int right) {
         if(left > right) return null;
-        int currentRootVal = preorder[preOrderIdx++];
-        TreeNode root = new TreeNode(currentRootVal);
-        root.left = arrToTree(preorder, left, inOrderIdxMap.get(currentRootVal)-1);
-        root.right = arrToTree(preorder, inOrderIdxMap.get(currentRootVal)+1, right);
+        int currVal = preorder[preOrderIdx++];
+        TreeNode root = new TreeNode(currVal);
+        
+        root.left = buildTree(preorder, left, inorderIdxMap.get(currVal) - 1);
+        root.right = buildTree(preorder, inorderIdxMap.get(currVal)+1, right);
+        
         return root;
     }
 }
