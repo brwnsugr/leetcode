@@ -1,50 +1,34 @@
 class Solution {
-  public int countComponents(int n, int[][] edges) {
-    UnionFind uf = new UnionFind(n);
-    int count = n;
-
-    /**traverse all the pair of edges, union the pair,
-     * and if it has already connected, skip
-     * and if it's not, union and decrease count by 1.
-     */
-
-    for(int[] edge : edges) {
-      if(!uf.isConnected(edge[0], edge[1])) {
-        uf.union(edge[0], edge[1]);
-        count--;
-      }
+    
+    private Set<Integer> visited = new HashSet<>();
+    
+    public int countComponents(int n, int[][] edges) {
+        int componentCount = 0;
+        List<List<Integer>> adjList = new ArrayList<>(n);
+        for(int i = 0; i < n; i++) adjList.add(new ArrayList<>());
+            
+        for(int[] edge : edges) {
+            adjList.get(edge[0]).add(edge[1]);
+            adjList.get(edge[1]).add(edge[0]);
+        }
+        
+        for(int i = 0; i < n; i++) {
+            if(!visited.contains(i)) {
+                dfs(i, adjList);
+                componentCount++;
+            }
+            
+        }
+        
+        return componentCount;
     }
-    return count;
-  }
-}
-
-class UnionFind {
-
-  int[] parents;
-  int size;
-
-  public UnionFind(int n) {
-    parents = new int[n];
-    size = n;
-    for(int i = 0; i < n; i++) parents[i] = i;
-  }
-
-  public int find(int x) {
-    return parents[x];
-  }
-
-  public void union(int x, int y) {
-    int rootX = find(x);
-    int rootY = find(y);
-    if(rootX == rootY) return;
-    else {
-      for(int i = 0; i < size; i++) {
-        if(parents[i] == rootY) parents[i] = rootX;
-      }
+    
+    private void dfs(int curr, List<List<Integer>> adjList) {
+        visited.add(curr);
+        for(int neighbor : adjList.get(curr)){
+            if(!visited.contains(neighbor)) {
+                dfs(neighbor, adjList);
+            }
+        }
     }
-  }
-  
-  public boolean isConnected(int x, int y) {
-    return find(x) == find(y);
-  }
 }
