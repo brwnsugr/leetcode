@@ -18,7 +18,6 @@ class Solution {
             }
             else {
                 if(arr[i] > arr[i-1]) return false;
-                else hasDecreasingInterval = true;
             }
         }
         return hasIncreasingInterval && hasDecreasingInterval;
