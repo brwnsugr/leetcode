@@ -1,7 +1,7 @@
 class Solution {
-    public boolean validTree(int n, int[][] edges) {
-        List<List<Integer>> adjList = new ArrayList<>();
-        
+    private List<List<Integer>> adjList = new ArrayList<>();
+    
+    public boolean validTree(int n, int[][] edges) {    
         for(int i = 0; i < n; i++) adjList.add(new ArrayList<>());
         for(int[] edge : edges) {
             int prev = edge[0];
@@ -12,21 +12,34 @@ class Solution {
         
         Map<Integer, Integer> parentMap = new HashMap<>();
         parentMap.put(0, -1);
-        Stack<Integer> st = new Stack<>();
+        return dfs(0, parentMap) && parentMap.size() == n;
+//         Stack<Integer> st = new Stack<>();
         
-        st.add(0);
+//         st.add(0);
         
-        while(!st.isEmpty()) {
-            int curr = st.pop();
-            for(int neighbor : adjList.get(curr)) {
-                if(parentMap.get(curr) == neighbor) continue;
-                if(parentMap.containsKey(neighbor)) return false;
-                st.add(neighbor);
-                parentMap.put(neighbor, curr);
-            }
+//         while(!st.isEmpty()) {
+//             int curr = st.pop();
+//             for(int neighbor : adjList.get(curr)) {
+//                 if(parentMap.get(curr) == neighbor) continue;
+//                 if(parentMap.containsKey(neighbor)) return false;
+//                 st.add(neighbor);
+//                 parentMap.put(neighbor, curr);
+//             }
+//         }
+        
+//         return parentMap.size() == n;
+    }
+    
+    
+    private boolean dfs(int curr, Map<Integer, Integer> parentMap) {
+        for(int neighbor : adjList.get(curr)) {
+            if(parentMap.get(curr) == neighbor) continue;
+            if(parentMap.containsKey(neighbor)) return false;
+            parentMap.put(neighbor, curr);
+            boolean neighborACyclic = dfs(neighbor, parentMap);
+            if(!neighborACyclic) return false;
         }
-        
-        return parentMap.size() == n;
+        return true;
     }
 }
 
