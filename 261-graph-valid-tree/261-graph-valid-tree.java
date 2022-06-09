@@ -9,25 +9,9 @@ class Solution {
             adjList.get(prev).add(dest);
             adjList.get(dest).add(prev);
         }
-        
         Map<Integer, Integer> parentMap = new HashMap<>();
         parentMap.put(0, -1);
         return dfs(0, parentMap) && parentMap.size() == n;
-//         Stack<Integer> st = new Stack<>();
-        
-//         st.add(0);
-        
-//         while(!st.isEmpty()) {
-//             int curr = st.pop();
-//             for(int neighbor : adjList.get(curr)) {
-//                 if(parentMap.get(curr) == neighbor) continue;
-//                 if(parentMap.containsKey(neighbor)) return false;
-//                 st.add(neighbor);
-//                 parentMap.put(neighbor, curr);
-//             }
-//         }
-        
-//         return parentMap.size() == n;
     }
     
     
