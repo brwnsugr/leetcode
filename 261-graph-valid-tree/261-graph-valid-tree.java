@@ -21,7 +21,7 @@ class Solution {
             if(parentMap.containsKey(neighbor)) return false;
             parentMap.put(neighbor, curr);
             boolean neighborACyclic = dfs(neighbor, parentMap);
-            if(!neighborACyclic) return false;
+            // if(!neighborACyclic) return false;
         }
         return true;
     }
