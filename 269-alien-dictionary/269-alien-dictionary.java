@@ -1,77 +1,85 @@
 class Solution {
-  Map<Character, List<Character>> adjList = new HashMap<>();
-  Map<Character, Integer> counts = new HashMap<>();
-
-  public String alienOrder(String[] words) {
-
-    //cut edge case
-    if(words.length == 1)
-      return removeDuplicate(words[0]);
-
-
-    //init adjList by empty list
-    for(String word : words) {
-      for(char c : word.toCharArray()) {
-        adjList.put(c, new ArrayList<>());
-        counts.put(c, 0);
-      }
+    private Map<Character, List<Character>> adjMap = new HashMap<>();
+    private Map<Character, Integer> inDegrees = new HashMap<>();
+    private boolean dictValid = true;
+    
+    public String alienOrder(String[] words) {
+        if(words.length == 1) return getRemovedDuplicatedWord(words[0]);
+        for(String word : words) {
+            for(char c : word.toCharArray()) {
+                inDegrees.put(c, 0);
+                adjMap.put(c, new ArrayList<>());
+            }
+        }
+        
+        initializeGraph(words);
+        if(!dictValid) return "";
+        
+        
+        // construct inDegree Count
+        Queue<Character> q = new LinkedList<>();
+        for(Map.Entry<Character, Integer> entry : inDegrees.entrySet()) {
+            if(entry.getValue() == 0) q.add(entry.getKey());
+        }
+        StringBuilder strBuilder = new StringBuilder();
+        while(!q.isEmpty()) {
+            char curr = q.poll();
+            
+            for(char neighbor : adjMap.get(curr)) {
+                inDegrees.put(neighbor, inDegrees.get(neighbor) -1);
+                if(inDegrees.get(neighbor) == 0) q.add(neighbor);
+            }
+            strBuilder.append(curr);
+        }
+        
+        return inDegrees.size() == strBuilder.length() ? new String(strBuilder) : "";
     }
-
-    //build up graph (inDegree for each vertex, and init adjList of these)
-    if(!buildUpGraph(words)) return "";
-
-    StringBuilder sb = new StringBuilder();
-
-    Queue<Character> q = new LinkedList<>();
-
-    for(Character c : counts.keySet()) {
-      if(counts.get(c) == 0) q.add(c);
+    
+    
+    private void initializeGraph(String[] words) {
+        
+        
+        for(int i = 0; i < words.length - 1; i++) {
+            String currWord = words[i];
+            String nextWord = words[i+1];
+            if(currWord.length() > nextWord.length() && currWord.startsWith(nextWord)) {
+                dictValid = false;
+                return;
+            }
+            int firstDiffIdx = 0;
+            while(firstDiffIdx < currWord.length() && firstDiffIdx < nextWord.length()
+                 && currWord.charAt(firstDiffIdx) == nextWord.charAt(firstDiffIdx)) {
+                firstDiffIdx++;
+            }
+            
+            // construct directed edge
+            if(firstDiffIdx < currWord.length() && firstDiffIdx < nextWord.length()) {
+                adjMap.get(currWord.charAt(firstDiffIdx)).add(nextWord.charAt(firstDiffIdx));
+                inDegrees.put(nextWord.charAt(firstDiffIdx), inDegrees.getOrDefault(nextWord.charAt(firstDiffIdx), 0) + 1);
+            }
+            
+            
+        }
+        
+        
     }
-
-    while(!q.isEmpty()) {
-      Character curr = q.remove();
-      sb.append(curr);
-
-      for(Character next : adjList.get(curr)) {
-        counts.put(next, counts.get(next) -1);
-        if(counts.get(next) == 0) q.add(next);
-      }
+    
+    private String getRemovedDuplicatedWord(String word) {
+        StringBuilder strBuilder = new StringBuilder();
+        char[] arr = word.toCharArray();
+        boolean[] visited = new boolean[26];
+        for(char c : arr) {
+            if(visited[c-'a']) continue;
+            strBuilder.append(c);
+            visited[c-'a'] = true;
+        }
+        return new String(strBuilder);
     }
-
-    return sb.length() == counts.size() ? sb.toString() : "";
-  }
-
-
-  private boolean buildUpGraph(String[] words) {
-    for(int i = 0; i < words.length-1; i++) {
-      //compare adj pair -> put pair of character where occurs first difference
-      if(words[i].length() > words[i+1].length() && words[i].startsWith(words[i+1])) return false;
-
-      int firstDiffIdx = 0;
-      while(firstDiffIdx < words[i].length()
-          && firstDiffIdx < words[i+1].length()
-          && words[i].charAt(firstDiffIdx) == words[i+1].charAt(firstDiffIdx)) {
-        firstDiffIdx++;
-      }
-
-      if(firstDiffIdx < words[i].length() && firstDiffIdx < words[i+1].length()) {
-        adjList.get(words[i].charAt(firstDiffIdx)).add(words[i+1].charAt(firstDiffIdx));
-        counts.put(words[i+1].charAt(firstDiffIdx), counts.get(words[i+1].charAt(firstDiffIdx)) + 1);
-      }
-    }
-    return true;
-  }
-
-  private String removeDuplicate(String input) {
-    Set<Character> s = new HashSet<>();
-    StringBuilder strBuilder = new StringBuilder();
-    for(int i = 0; i < input.length(); i++) {
-      if(s.contains(input.charAt(i))) continue;
-      else {
-        strBuilder.append(input.charAt(i));
-        s.add(input.charAt(i));
-      }
-    }
-    return strBuilder.toString();
-  }
 }
+
+
+
+
+
+// t->f,  w->e, r->t, e->r
+// 
