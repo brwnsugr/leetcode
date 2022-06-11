@@ -7,7 +7,7 @@ class Solution {
             minArr[i] = Math.min(nums[i-1], minArr[i-1]);
         }
         Stack<Integer> st = new Stack<>();
-        for(int j = nums.length-1; j >= 0; j--) {
+        for(int j = nums.length-1; j > 0; j--) {
             if(nums[j] > minArr[j]) {
                 while(!st.isEmpty() && st.peek() <= minArr[j]) {
                     st.pop();
