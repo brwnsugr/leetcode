@@ -1,28 +1,21 @@
 class Solution {
   public int trap(int[] height) {
-    // if we meet higher wall than previous height,
-    // then we move left til we meet higher than height[current]
-    //
-    //
-    Stack<Integer> s = new Stack<>();
-    int answer = 0;
-    int currIdx = 0;  // [1,0,1]
-    s.add(currIdx); // s = [0, 1]
-    while(!s.isEmpty() && currIdx < height.length - 1) {
-      currIdx++;
-      // int currHeight = height[s.top()];
-      while (!s.isEmpty() && height[s.peek()] < height[currIdx]) {
-        int currHeight = height[s.peek()];
-        s.pop();
-        if(s.isEmpty()) break;
-        int width = currIdx - s.peek() - 1;
-        int heightDiff = Math.min(height[currIdx], height[s.peek()]) - currHeight;
-        answer += (width * heightDiff);
+      Stack<Integer> st = new Stack<>();
+      int area = 0;
+      
+      for(int currPos = 0; currPos < height.length; currPos++) {
+          int currHeight = height[currPos];
+          while(!st.isEmpty() && height[st.peek()] < currHeight) {
+              int top = st.peek();
+              st.pop();
+              if(st.isEmpty()) break;
+              int width = currPos - st.peek() - 1;
+              int tempHeight = Math.min(height[currPos], height[st.peek()]) - height[top];
+              area += width * tempHeight;
+          } 
+          st.add(currPos);
       }
-      s.add(currIdx);
-    }
-
-    return answer;
-
+      
+      return area;
   }
 }
