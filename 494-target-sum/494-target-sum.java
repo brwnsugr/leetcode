@@ -27,13 +27,13 @@ class Solution {
             if(cache[i][sum + total] != -1) {
                 return cache[i][sum + total];
             }
-            else {
+            
                 int add = calculate(nums, i+1, sum + nums[i], S);
                 int subtract = calculate(nums, i+1, sum - nums[i], S);
                 
                 cache[i][sum + total] = add+subtract;
                 return cache[i][sum + total];
-            }
+    
         }
     }
 }
