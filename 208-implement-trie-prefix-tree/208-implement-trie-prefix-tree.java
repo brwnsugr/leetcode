@@ -12,10 +12,6 @@ class Trie {
         for(int i = 0; i < word.length(); i++) {
             char c = word.charAt(i);
             if(curr.next[c-'a'] ==null) curr.next[c-'a'] = new TrieNode();
-            if(i == 0) curr.next[c-'a'].isFilled = true;
-            else {
-                curr.next[c-'a'].isFilled = true;
-            }
             curr = curr.next[c-'a'];
         }
         curr.isEnd = true;
@@ -48,12 +44,10 @@ class Trie {
 class TrieNode {
     public TrieNode[] next;
     public boolean isEnd;
-    public boolean isFilled;
     
     public TrieNode() {
         this.next = new TrieNode[26];
         this.isEnd = false;
-        this.isFilled = false;
     }
 }
 
