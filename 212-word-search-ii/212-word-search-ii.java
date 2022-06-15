@@ -1,67 +1,77 @@
 class Solution {
-  private List<String> res = new ArrayList<>();
-  public static int[][] DIRECTIONS = {{1,0}, {0,1}, {-1,0}, {0,-1}};
-
-  public List<String> findWords(char[][] board, String[] words) {
-
-    TrieNode root = new TrieNode();
-
-    for(String word : words) {
-      TrieNode node = root;
-      char[] chars = word.toCharArray();
-      for(char letter : chars) {
-        if(node.children.containsKey(letter)) {
-          node = node.children.get(letter);
+    
+    private TrieNode root;
+    private List<String> answers;
+    private static int[][] DIRECTIONS = new int[][]{
+        {1,0},
+        {0,1},
+        {-1,0},
+        {0,-1}
+    };
+    public List<String> findWords(char[][] board, String[] words) {
+        root = new TrieNode();
+        
+        for(String word : words) {
+            insertWord(word);
         }
-        else {
-          node.children.put(letter, new TrieNode());
-          node = node.children.get(letter);
+        
+        answers = new ArrayList<>();
+        
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[0].length; j++) {
+                if(root.children.containsKey(board[i][j]))
+                    backTrack(board, i, j, root);
+            }
         }
-      }
-      node.word = word;
+        
+        return answers;
     }
-
-    for(int i = 0; i < board.length; i++) {
-      for(int j = 0; j < board[0].length; j++) {
-        if(root.children.containsKey(board[i][j])) {
-          backTrack(board, i, j, root);
+    
+    private void backTrack(char[][] board, int currRow, int currCol, TrieNode parent) {
+        char currCh = board[currRow][currCol];
+        TrieNode currNode = parent.children.get(currCh);
+        
+        if(currNode != null && currNode.word != null) {
+            answers.add(currNode.word);
+            currNode.word = null;
         }
-      }
-    }
-    return res;
-  }
-
-
-  private void backTrack(char[][] board, int currY, int currX, TrieNode parentNode) {
-    char currLetter = board[currY][currX];
-    TrieNode currNode = parentNode.children.get(currLetter);
-    if(currNode.word != null) {
-      res.add(currNode.word);
-      currNode.word = null;
-    }
-    int cols = board.length;
-    int rows = board[0].length;
-    board[currY][currX] = '#';
-    for(int[] direction : DIRECTIONS) {
-      int nextY = currY + direction[0];
-      int nextX = currX + direction[1];
-
-      if(nextY >= 0 && nextY < cols
-        && nextX >= 0 && nextX < rows) {
-        if(currNode.children.containsKey(board[nextY][nextX])) {
-          backTrack(board, nextY, nextX, currNode);
+        
+        board[currRow][currCol] = '#';
+        
+        for(int[] direction : DIRECTIONS) {
+            int nextRow = currRow + direction[0];
+            int nextCol = currCol + direction[1];
+            if(nextRow < board.length && nextRow >= 0
+              && nextCol < board[0].length && nextCol >= 0
+              && currNode != null) {
+                if(currNode.children.containsKey(board[nextRow][nextCol]))
+                    backTrack(board, nextRow, nextCol, currNode);
+            }
         }
-      }
+        
+        board[currRow][currCol] = currCh;
+        
+        if(currNode.children.isEmpty()) {
+            parent.children.remove(currCh);
+        }
+        
     }
-    board[currY][currX] = currLetter;
-
-    if(currNode.children.isEmpty()) {
-      parentNode.children.remove(currLetter);
+    
+    private void insertWord(String word) {
+        TrieNode curr = root;
+        for(int i = 0; i < word.length(); i++) {
+            char currCh = word.charAt(i);
+            if(!curr.children.containsKey(currCh)) curr.children.put(currCh, new TrieNode());
+            curr = curr.children.get(currCh);
+        }
+        curr.word = word;
     }
-  }
 }
-public class TrieNode {
-  String word;
-  HashMap<Character, TrieNode> children = new HashMap<>();
-  public TrieNode() {}
+
+class TrieNode{
+    Map<Character, TrieNode> children = new HashMap<>();
+    String word = null;
+    public TrieNode(){
+        
+    }
 }
