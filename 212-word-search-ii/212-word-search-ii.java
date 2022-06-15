@@ -51,9 +51,9 @@ class Solution {
         
         board[currRow][currCol] = currCh;
         
-        if(currNode.children.isEmpty()) {
-            parent.children.remove(currCh);
-        }
+        // if(currNode.children.isEmpty()) {
+        //     parent.children.remove(currCh);
+        // }
         
     }
     
