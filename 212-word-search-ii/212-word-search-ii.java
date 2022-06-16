@@ -14,7 +14,7 @@ class Solution {
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[0].length; j++) {
                 if(root.children.containsKey(board[i][j]))
-                    backTracking(board, root.children.get(board[i][j]), i, j);
+                    backTracking(board, root, i, j);
             }
         }
         
@@ -22,7 +22,8 @@ class Solution {
         
     }
     
-    private void backTracking(char[][] board, TrieNode currNode, int curRow, int curCol){
+    private void backTracking(char[][] board, TrieNode parent, int curRow, int curCol){
+        TrieNode currNode = parent.children.get(board[curRow][curCol]);
         if(currNode.word != null) {
             answers.add(currNode.word);
             currNode.word = null; // mark it as null to avoid the duplicated ones
@@ -40,10 +41,15 @@ class Solution {
             if(nextRow >= 0 && nextRow < board.length
               && nextCol >= 0 && nextCol < board[0].length
               && currNode.children.containsKey(board[nextRow][nextCol])) {
-                backTracking(board, currNode.children.get(board[nextRow][nextCol]), nextRow, nextCol);
+                backTracking(board, currNode, nextRow, nextCol);
             }
         }
         board[curRow][curCol] = currCh;
+        
+        if(currNode.children.isEmpty()) {
+            parent.children.remove(currCh);
+        }
+        
     }
     
     
