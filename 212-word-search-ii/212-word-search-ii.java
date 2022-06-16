@@ -2,75 +2,67 @@ class Solution {
     
     private TrieNode root;
     private List<String> answers;
-    private static int[][] DIRECTIONS = new int[][]{
-        {1,0},
-        {0,1},
-        {-1,0},
-        {0,-1}
-    };
+    
     public List<String> findWords(char[][] board, String[] words) {
         root = new TrieNode();
-        
+        answers = new ArrayList<>();
+        // insert word to Trie DS
         for(String word : words) {
             insertWord(word);
         }
-        
-        answers = new ArrayList<>();
-        
+        // backtracking in word grid til we find the path forms the complete word from the trie that we built
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[0].length; j++) {
                 if(root.children.containsKey(board[i][j]))
-                    backTrack(board, i, j, root);
+                    backTracking(board, root.children.get(board[i][j]), i, j);
             }
         }
         
         return answers;
+        
     }
     
-    private void backTrack(char[][] board, int currRow, int currCol, TrieNode parent) {
-        char currCh = board[currRow][currCol];
-        TrieNode currNode = parent.children.get(currCh);
-        
-        if(currNode != null && currNode.word != null) {
+    private void backTracking(char[][] board, TrieNode currNode, int curRow, int curCol){
+        if(currNode.word != null) {
             answers.add(currNode.word);
-            currNode.word = null;
+            currNode.word = null; // mark it as null to avoid the duplicated ones
         }
         
-        board[currRow][currCol] = '#';
+        char currCh = board[curRow][curCol];
         
-        for(int[] direction : DIRECTIONS) {
-            int nextRow = currRow + direction[0];
-            int nextCol = currCol + direction[1];
-            if(nextRow < board.length && nextRow >= 0
-              && nextCol < board[0].length && nextCol >= 0
-              && currNode != null) {
-                if(currNode.children.containsKey(board[nextRow][nextCol]))
-                    backTrack(board, nextRow, nextCol, currNode);
+        int[] nextRows = new int[]{1,-1,0,0};
+        int[] nextCols = new int[]{0,0,1,-1};
+        
+        board[curRow][curCol] = '#'; // for backtracking
+        for(int i = 0; i < 4; i++) {
+            int nextRow = curRow + nextRows[i];
+            int nextCol = curCol + nextCols[i];
+            if(nextRow >= 0 && nextRow < board.length
+              && nextCol >= 0 && nextCol < board[0].length
+              && currNode.children.containsKey(board[nextRow][nextCol])) {
+                backTracking(board, currNode.children.get(board[nextRow][nextCol]), nextRow, nextCol);
             }
         }
-        
-        board[currRow][currCol] = currCh;
-        
-        // if(currNode.children.isEmpty()) {
-        //     parent.children.remove(currCh);
-        // }
-        
+        board[curRow][curCol] = currCh;
     }
+    
     
     private void insertWord(String word) {
         TrieNode curr = root;
-        for(int i = 0; i < word.length(); i++) {
-            char currCh = word.charAt(i);
-            if(!curr.children.containsKey(currCh)) curr.children.put(currCh, new TrieNode());
-            curr = curr.children.get(currCh);
+        for(char c : word.toCharArray()) {
+            if(!curr.children.containsKey(c)) {
+                curr.children.put(c, new TrieNode());
+            }
+            curr = curr.children.get(c);
         }
         curr.word = word;
     }
 }
 
+
 class TrieNode{
-    Map<Character, TrieNode> children = new HashMap<>();
-    String word = null;
+    public Map<Character, TrieNode> children = new HashMap<>();
+    public String word;
     public TrieNode(){
         
     }
