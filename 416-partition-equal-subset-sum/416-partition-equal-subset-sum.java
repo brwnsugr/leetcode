@@ -1,35 +1,28 @@
 class Solution {
     
-    private int target;
-    private Boolean cache[][];
+    private int subsetTarget;
     
     public boolean canPartition(int[] nums) {
+        int totalSum = 0;
+        for(int num : nums) totalSum += num;
+        if(totalSum % 2 != 0) return false;
+        subsetTarget = totalSum / 2;
+        boolean[][] dp = new boolean[nums.length+1][subsetTarget+1];
         
-        target = 0;
-        int sum = 0;
-        for(int num : nums) sum += num;
-        if(sum % 2 == 1) return false;
-        target = sum / 2;
-        cache = new Boolean[nums.length+1][sum+1];
+        dp[0][0] = true;
         
-        return isValid(nums, nums.length, 0);
+        for(int i = 1; i <= nums.length; i++) {
+            for(int j = 0; j <= subsetTarget; j++) {
+                if(j - nums[i-1] >= 0) {
+                    dp[i][j] = dp[i-1][j] || dp[i-1][j-nums[i-1]];
+                }
+                else {
+                    dp[i][j] = dp[i-1][j];
+                }
+            }
+        }
+        
+        return dp[nums.length-1][subsetTarget];
     }
-    
-    private boolean isValid(int[] nums, int remainCount, int cumSum) {
-        if(cumSum == target) {
-            return true;
-        }
-        if(remainCount == 0 || cumSum > target) {
-            cache[remainCount][cumSum] = false;
-            return false;
-        }
-        if(cache[remainCount][cumSum] != null) return cache[remainCount][cumSum]; 
-        if(isValid(nums, remainCount-1, cumSum+nums[remainCount-1]) || isValid(nums, remainCount-1, cumSum)) {
-            return true;
-        }
-        
-        cache[remainCount][cumSum] = false;
-        return false;
-        
-    }
+
 }
