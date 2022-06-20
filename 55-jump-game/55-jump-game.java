@@ -11,6 +11,7 @@ class Solution {
             for (int j = i + 1; j <= furthestJump; j++) {
                 if (memo[j] == Index.GOOD) {
                     memo[i] = Index.GOOD;
+                    break;
                 }
             }
         }
