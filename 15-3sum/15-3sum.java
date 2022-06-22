@@ -17,14 +17,17 @@ class Solution {
     }
     
     private void checkRestSum(int start, int[] nums, int target) {
-        Set<Integer> visited = new HashSet<>();
-        for(int i = start; i < nums.length; i++) {
-            int complement = target - nums[i];
-            if(visited.contains(complement)) {
-                res.add(Arrays.asList(nums[start-1], complement, nums[i]));
-                while(i < nums.length -1 &&nums[i] == nums[i+1]) i++;
+        int lo = start;
+        int hi = nums.length - 1;
+        
+        while(lo < hi) {
+            int sum = nums[start-1] + nums[lo] + nums[hi];
+            if(sum < 0) lo++;
+            else if(sum > 0) hi--;
+            else {
+                res.add(Arrays.asList(nums[start-1], nums[lo++], nums[hi--]));
+                while(lo < hi && nums[lo] == nums[lo-1]) lo++;
             }
-            visited.add(nums[i]);
         }
     }
 }
