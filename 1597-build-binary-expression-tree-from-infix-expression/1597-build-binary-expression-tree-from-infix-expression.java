@@ -20,9 +20,6 @@ class Solution {
         String postfix = convertToPostfix(s);
         StringBuffer sb = new StringBuffer(postfix);
         String reversedStr = sb.reverse().toString();
-        
-//         Node root = new Node(reversedStr.charAt(0));
-//         Node curr = root;
         return createTree(reversedStr);
     }
     
@@ -41,12 +38,6 @@ class Solution {
         return node;
     }
     
-//     private void reverse(String input) {
-//         int len = input.length();
-//         for(int i = 0; i < len/2; i++) {
-            
-//         }
-//     }
     
     private String convertToPostfix(String infix) {
         StringBuilder strBuilder = new StringBuilder(); 
@@ -67,16 +58,6 @@ class Solution {
                     
                 st.pop();
             }
-            // else {
-            //     if(st.isEmpty()) st.add(c);
-            //     else if(st.peek() != '(' && scoreMap.get(c) > scoreMap.get(st.peek())){
-            //         st.add(c);
-            //     }
-            //     else {
-            //         strBuilder.append(st.pop());
-            //         st.add(c);
-            //     }
-            // }
             else{
                 while(!st.isEmpty() && scoreMap.containsKey(st.peek()) && scoreMap.get(c) <= scoreMap.get(st.peek())) {
                     strBuilder.append(st.pop());
