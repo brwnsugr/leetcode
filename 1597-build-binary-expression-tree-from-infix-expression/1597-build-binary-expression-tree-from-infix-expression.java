@@ -14,61 +14,56 @@
  * }
  */
 class Solution {
-    int i = 0;
+    
+    private int idx = 0;
+    
     public Node expTree(String s) {
-        // convert infixx operation s -> postfix 
-        String postfix = convertToPostfix(s);
-        StringBuffer sb = new StringBuffer(postfix);
-        String reversedStr = sb.reverse().toString();
-        return createTree(reversedStr);
+        String ret = convertToPrefix(s);
+        StringBuffer strBuffer = new StringBuffer(ret);
+        String reverseStr = strBuffer.reverse().toString();
+        return createNode(reverseStr);
     }
     
-    private Node createTree(String s) {
-        char c = s.charAt(i++);
-        Node node = new Node(c);
-        
-        if( c == '+' || c == '-' || c == '*' || c =='/') {
-            if(node.right == null) {
-                node.right = createTree(s);
-            }
-            if(node.left == null) {
-                node.left = createTree(s);
-            }
+    private Node createNode(String str) {
+        char curr = str.charAt(idx++);
+        Node node = new Node(curr);
+        if(curr == '+' || curr =='-' || curr == '*' || curr == '/') {
+            node.right = createNode(str);
+            node.left = createNode(str);
         }
         return node;
     }
     
-    
-    private String convertToPostfix(String infix) {
-        StringBuilder strBuilder = new StringBuilder(); 
+    private String convertToPrefix(String infix) {
+        StringBuilder strBuilder = new StringBuilder();
         Stack<Character> st = new Stack<>();
-        Map<Character, Integer> scoreMap = new HashMap<>();
-        scoreMap.put('+', 1);
-        scoreMap.put('-', 1);
-        scoreMap.put('*', 2);
-        scoreMap.put('/', 2);
+        
         for(char c : infix.toCharArray()) {
-            if(Character.isDigit(c)) strBuilder.append(c);
-            else if(c == '(') st.add(c);
+            if(c == '(') st.add(c);
             else if(c == ')') {
                 while(st.peek() != '(') {
-                    char p = st.pop();
-                    strBuilder.append(p); 
-                }
-                    
-                st.pop();
-            }
-            else{
-                while(!st.isEmpty() && scoreMap.containsKey(st.peek()) && scoreMap.get(c) <= scoreMap.get(st.peek())) {
                     strBuilder.append(st.pop());
                 }
+                st.pop();
+            }
+            else if(c == '*' || c == '/' || c == '+' || c == '-') {
+                while(!st.isEmpty() && st.peek() != '(' && getPrecedence(c) <= getPrecedence(st.peek()))
+                    strBuilder.append(st.pop());
                 st.add(c);
             }
+            else {
+                strBuilder.append(c);
+            }
         }
-        
         while(!st.isEmpty()) {
             strBuilder.append(st.pop());
         }
+        
         return new String(strBuilder);
+    }
+    
+    private int getPrecedence(char c) {
+        if(c == '*' || c == '/') return 2;
+        else  return 1;
     }
 }
