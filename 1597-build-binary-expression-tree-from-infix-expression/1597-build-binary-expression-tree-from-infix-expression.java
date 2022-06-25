@@ -51,7 +51,7 @@ class Solution {
             if(Character.isDigit(c)) strBuilder.append(c);
             else if(c == '(') st.add(c);
             else if(c == ')') {
-                while(!st.isEmpty() && st.peek() != '(') {
+                while(st.peek() != '(') {
                     char p = st.pop();
                     strBuilder.append(p); 
                 }
