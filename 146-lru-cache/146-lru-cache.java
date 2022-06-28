@@ -1,30 +1,27 @@
 class LRUCache {
-
     
     private int capacity;
-    private int currentCapacity;
-    private Map<Integer, DNode> map;
-    private DNode head, tail;
-    
+    private int currentSize;
+    private Map<Integer, DNode> map = new HashMap<>();
+    private DNode head;
+    private DNode tail;
+
     public LRUCache(int capacity) {
-        this.capacity = capacity;
-        this.currentCapacity = 0;
-        this.map = new HashMap<>();
-        this.head = new DNode();
-        this.tail = new DNode();
-        tail.next = null;
-        head.prev = null;
+        head = new DNode();
+        tail = new DNode();
         head.next = tail;
         tail.prev = head;
+        this.capacity = capacity;
+        this.currentSize = 0;
     }
     
     public int get(int key) {
-        if(map.containsKey(key)) {
-            DNode node = map.get(key);
+        DNode node = map.get(key);
+        if(node == null) return -1;
+        else {
             moveToHead(node);
             return node.value;
         }
-        return -1;
     }
     
     public void put(int key, int value) {
@@ -35,38 +32,41 @@ class LRUCache {
             node.key = key;
             node.value = value;
             map.put(key, node);
-            addToHead(node);
-            currentCapacity++;
-            if(currentCapacity > capacity) {
-                DNode tailNode = tail;
-                map.remove(tailNode.prev.key);
-                removeTail();
-                currentCapacity--;
-            }
+            addNode(node);
+            currentSize++;
             
+            if(currentSize > capacity) {
+                
+                DNode lastNode = popTail();
+                map.remove(lastNode.key);
+                --currentSize;
+            }
         }
+    
         else {
             node.value = value;
             moveToHead(node);
         }
     }
-
-    private void addToHead(DNode node) {
-        node.prev = head;
-        node.next = head.next;
-        head.next.prev = node;
-        head.next = node;
-    }
-        
-        
-    private void removeTail() {
-        DNode nodeToRemove = tail.prev;
-        removeNode(nodeToRemove);
-    }
-        
+    
     private void moveToHead(DNode node) {
+//         node.prev.next = node.next;
+        
+//         DNode temp = head.next;
+        
+//         head.next = node;
+//         node.next = temp;
+//         node.prev = head;
         removeNode(node);
-        addToHead(node);
+        addNode(node);
+    }
+    
+    private void addNode(DNode node) {
+        DNode temp = head.next;
+        head.next = node;
+        node.next = temp;
+        temp.prev = node;
+        node.prev = head;
     }
     
     private void removeNode(DNode node) {
@@ -76,14 +76,22 @@ class LRUCache {
         prev.next = next;
         next.prev = prev;
     }
-        
-           
-    static class DNode {
-        DNode next;
-        DNode prev;
-        int value;
-        int key;
+    
+    private DNode popTail() {
+        DNode lastNode = tail.prev;
+        removeNode(lastNode);
+        return lastNode;
     }
+    
+    
+    
+}
+
+class DNode {
+    int key;
+    int value;
+    DNode prev;
+    DNode next;
 }
 
 /**
@@ -92,4 +100,3 @@ class LRUCache {
  * int param_1 = obj.get(key);
  * obj.put(key,value);
  */
-
