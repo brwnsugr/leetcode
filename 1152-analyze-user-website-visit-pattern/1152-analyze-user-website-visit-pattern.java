@@ -1,65 +1,58 @@
 class Solution {
-    
-    
-    
     public List<String> mostVisitedPattern(String[] username, int[] timestamp, String[] website) {
         Map<String, List<Pair>> userMap = new HashMap<>();
-        for(int i = 0; i < username.length; i++) {
+        
+        for(int i = 0; i < username.length; i++){
             userMap.putIfAbsent(username[i], new ArrayList<>());
-            userMap.get(username[i]).add(new Pair(timestamp[i], website[i]));
+            userMap.get(username[i]).add(new Pair(website[i], timestamp[i]));
         }
         
         Map<String, Integer> countMap = new HashMap<>();
-        String answer = "";
-        int currentSize = 0;
-        
+        String res = "";
+        int currentFreq = 0;
         for(Map.Entry<String, List<Pair>> entry : userMap.entrySet()) {
-            List<Pair> list = entry.getValue();
             
-            Collections.sort(list, (a, b) -> a.time - b.time);
-            int len = list.size();
-            Set<String> s = new HashSet<>();
-            for(int i = 0; i < len - 2; i++) {
-                for(int j = i + 1; j < len - 1; j++) {
-                    for(int k = j + 1; k < len; k++) {
+            Set<String> visited = new HashSet<>();
+            List<Pair> userWebs = entry.getValue();
+            
+            Collections.sort(userWebs, (a,b) -> a.time - b.time);
+            
+            int size = userWebs.size();
+            
+            for(int i = 0; i < size - 2; i++) {
+                for(int j = i + 1; j < size - 1; j++) {
+                    for(int k = j + 1; k < size; k++) {
                         StringBuilder strBuilder = new StringBuilder();
-                        strBuilder.append(list.get(i).web);
-                        strBuilder.append(' ');
-                        strBuilder.append(list.get(j).web);
-                        strBuilder.append(' ');
-                        strBuilder.append(list.get(k).web);
+                        strBuilder.append(userWebs.get(i).web).append(' ');
+                        strBuilder.append(userWebs.get(j).web).append(' ');
+                        strBuilder.append(userWebs.get(k).web);
                         String concatWeb = new String(strBuilder);
-                        
-                        if(!s.contains(concatWeb)) {
+                        if(!visited.contains(concatWeb)) {
                             countMap.put(concatWeb, countMap.getOrDefault(concatWeb, 0) + 1);
-                            s.add(concatWeb);
+                            visited.add(concatWeb);
                         }
-                            
                         
-                        if(answer.equals("") || currentSize < countMap.get(concatWeb) 
-                           || (currentSize == countMap.get(concatWeb) && answer.compareTo(concatWeb) >= 0)) {
-                            answer = concatWeb;
-                            currentSize = countMap.get(concatWeb);
+                        if(res.equals("") || countMap.get(concatWeb) > currentFreq 
+                           ||(countMap.get(concatWeb) == currentFreq && res.compareTo(concatWeb) >= 0)) {
+                            res = concatWeb;
+                            currentFreq = countMap.get(concatWeb);
                         }
                     }
                 }
             }
-
-            
-            
-            
         }
-        List<String> ans = Arrays.asList(answer.split(" "));
-        // Collections.sort(ans);
-        return ans;
+        
+        return Arrays.asList(res.split(" "));
     }
 }
 
+
 class Pair{
-    public int time;
-    public String web;
-    public Pair(int time, String web){
-        this.time = time;
+    int time;
+    String web;
+    
+    public Pair(String web, int time) {
         this.web = web;
+        this.time = time;
     }
 }
