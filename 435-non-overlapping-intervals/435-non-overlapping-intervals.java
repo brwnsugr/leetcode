@@ -1,23 +1,33 @@
 class Solution {
     public int eraseOverlapIntervals(int[][] intervals) {
-        Arrays.sort(intervals, (int[] t1, int[] t2) -> {return t1[0] - t2[0];});
+        Arrays.sort(intervals, (a,b) -> a[0] - b[0]);
         
-        int startVal = intervals[0][0];
-        int endVal = intervals[0][1];
-        int numberOfRemoval = 0;
+        int[] prevInterval = intervals[0];
+        int eraseCount = 0;
         
         for(int i = 1; i < intervals.length; i++) {
-            int currStart = intervals[i][0];
-            int currEnd = intervals[i][1];
-            if(currStart < endVal) {
-                numberOfRemoval++;
-                endVal = Math.min(currEnd, endVal);
+            if(isOverlapping(prevInterval, intervals[i])) {
+                int currEnd = intervals[i][1];
+                int prevEnd = prevInterval[1];
+                
+                if(prevEnd >= currEnd) {
+                    prevInterval = intervals[i];
+                }
+                eraseCount++;
             }
             else {
-                endVal = currEnd;
+                prevInterval = intervals[i];
             }
         }
         
-        return numberOfRemoval;
+        
+        
+        
+        return eraseCount;
+    }
+    
+    
+    private boolean isOverlapping(int[] a, int[] b) {
+        return a[0] < b[1] && a[1] > b[0];
     }
 }
