@@ -30,6 +30,6 @@ class Solution {
         if(!leftSufficient) root.left = null;
         if(!rightSufficient) root.right = null;
         
-        return root.left!= null || root.right != null;
+        return root.left != null || root.right != null;
     }
 }
