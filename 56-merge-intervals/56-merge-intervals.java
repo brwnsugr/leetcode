@@ -1,35 +1,36 @@
 class Solution {
     public int[][] merge(int[][] intervals) {
-        /*
-        Naive Approach: sort the interval by the start time of each element by ascending order
-           ^    ^       
-        (1,3), (2,6) -> for every consecutive two elements, compare the end time of 1st, and start time of 2nd element 
         
-        3>2 , Merge end time 1 ~ Math(3,6) 
-        
-        O(nlog) + O(N) = O(nlog)
-        
-        */
-        
-        Arrays.sort(intervals, (int[] t1, int[] t2)->t1[0] - t2[0]);
-    
-        int start = intervals[0][0];
-        int end = intervals[0][1];
-        int[][] mergedIntervals = new int[intervals.length][2];
-        int t = 0;
-        for(int i = 0; i < intervals.length; i++) {
-            if(i < intervals.length -1 && intervals[i+1][0] <= end) {
-                end = Math.max(intervals[i][1], Math.max(end, intervals[i+1][1]));
-            }
+        Arrays.sort(intervals, (a,b) ->a[0] - b[0]);
+        int[] prevInterval = intervals[0];
+        List<int[]> newIntervals = new ArrayList<>();
+        for(int i = 1; i < intervals.length; i++) {
+            int[] currInterval = intervals[i];
             
+            if(isOverlapping(prevInterval, currInterval)) 
+                prevInterval = mergeInterval(prevInterval, currInterval);
             else {
-                mergedIntervals[t][0] = start;
-                mergedIntervals[t++][1] = end;
-                if(i == intervals.length -1) break;
-                start = intervals[i+1][0];
-                end = intervals[i+1][1];
+                newIntervals.add(prevInterval);
+                prevInterval = currInterval;
             }
         }
-        return Arrays.copyOfRange(mergedIntervals, 0, t);
+        newIntervals.add(prevInterval);
+        
+        int[][] answer = new int[newIntervals.size()][2];
+        int idx = 0;
+        for(int[] newInterval : newIntervals) {
+            answer[idx][0] = newInterval[0];
+            answer[idx++][1] = newInterval[1];
+        }
+        
+        return answer;
+    }
+    
+    private boolean isOverlapping(int[] a, int[] b) {
+        return a[0] <= b[1] && a[1] >= b[0];
+    }
+    
+    private int[] mergeInterval(int[] a, int[] b){
+        return new int[]{Math.min(a[0], b[0]), Math.max(a[1], b[1])};
     }
 }
