@@ -1,17 +1,20 @@
 class Solution {
     public boolean canAttendMeetings(int[][] intervals) {
-        // ( ) 
-        //    (   ) (  )
-        Arrays.sort(intervals, (int[] t1, int[] t2) -> t1[0] - t2[0] );
-        if(intervals.length == 0) return true;
-        int end = intervals[0][1];
+        if(intervals.length < 2) return true;
+        Arrays.sort(intervals, (a,b) -> a[0] - b[0]);
+        
+        int[] prevInterval = intervals[0];
         
         for(int i = 1; i < intervals.length; i++) {
-            if(intervals[i][0] >= end) end = intervals[i][1];
-            else return false;
+            if(isOverlapping(prevInterval, intervals[i]))
+               return false;
+            prevInterval = intervals[i];   
         }
         
         return true;
-        
+    }
+    
+    private boolean isOverlapping(int[] a, int[] b) {
+        return a[0] < b[1] && a[1] > b[0];
     }
 }
