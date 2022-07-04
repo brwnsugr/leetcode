@@ -7,11 +7,11 @@ class Solution {
             int temp = s.charAt(i) == '1' ? 1 : 0;
             p[i+1] = p[i] + temp;
         }
-        
+
         /*
         check all the elements 0 or 1
         */
-        if(p[n-1] == n || p[n-1] == 0) return 0;
+        if(p[n] == n || p[n] == 0) return 0;
         int answer = Integer.MAX_VALUE;
         //[0,1,2,2,3,4] "00110"
         //left part len = 0, right len = n
