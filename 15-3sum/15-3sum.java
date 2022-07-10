@@ -1,35 +1,47 @@
 class Solution {
     
-    private List<List<Integer>> res;
+    private List<List<Integer>> answers = new ArrayList<>();
+    
     public List<List<Integer>> threeSum(int[] nums) {
-        res = new ArrayList<>();
+        
+        //try all the comb of nums and check if it equqls target
         Arrays.sort(nums);
-        for(int i = 0; i < nums.length-2; i++) {
-            int pairTarget = -nums[i];
+        
+        for(int i = 0; i < nums.length - 2; i++) {
             if(i != 0 && nums[i] == nums[i-1]) continue;
-            buildPairTarget(pairTarget, i + 1, nums);
+            int semiTarget = -nums[i];
+            appendTriplets(semiTarget, i + 1, nums);
         }
-        return res;
+        
+        return answers;
     }
     
-    private void buildPairTarget(int target, int start, int[] nums) {
-        int l = start;
-        int r = nums.length - 1;
+    private void appendTriplets(int semiTarget, int start, int[] nums) {
+        int end = nums.length - 1;
         
         
-        while(l < r) {
-            int sum = nums[l] + nums[r];
-            if(sum > target) {
-                r--;
+        while(start < end) {
+            int startVal = nums[start];
+            int endVal = nums[end];
+            
+            if(startVal + endVal < semiTarget) {
+                start++;
             }
-            else if(sum < target) {
-                l++;
+            
+            else if(startVal + endVal > semiTarget) {
+                end--;
             }
+            
             else {
-                res.add(Arrays.asList(-target, nums[l++], nums[r--]));
-                while(l < r && nums[l] == nums[l-1]) l++;
+                answers.add(Arrays.asList(-semiTarget, nums[start++], nums[end--]));
+                while(start < end && nums[start] == nums[start-1]) start++;
             }
-        }
+            
+        }        
         
+        return;
     }
+    
+    
+    
 }
