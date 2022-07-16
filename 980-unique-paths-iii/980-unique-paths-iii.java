@@ -48,14 +48,14 @@ class Solution {
         }
         
         grid[currRow][currCol] = -4;
-        remain--;
+        // remain--;
         for(int[] direction : DIRECTIONS) {
             int nextRow = currRow + direction[0];
             int nextCol = currCol + direction[1];
             if(nextRow >= 0 && nextRow < rows
               && nextCol >= 0 && nextCol < cols
               && grid[nextRow][nextCol] >= 0) {
-                backTrack(nextRow, nextCol, remain, grid);
+                backTrack(nextRow, nextCol, remain -1 , grid);
             }
         }
         
