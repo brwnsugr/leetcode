@@ -33,13 +33,13 @@ class Solution {
             }
         }
         
-        backTrack(startRow, startCol, emptyCells);
+        backTrack(startRow, startCol, emptyCells, grid);
         
         return answer;
     }
     
     
-    private void backTrack(int currRow, int currCol, int remain) {
+    private void backTrack(int currRow, int currCol, int remain, int[][] grid) {
         int currCell = grid[currRow][currCol];
 
         if(currCell == 2 && remain == 1) {
@@ -55,7 +55,7 @@ class Solution {
             if(nextRow >= 0 && nextRow < rows
               && nextCol >= 0 && nextCol < cols
               && grid[nextRow][nextCol] >= 0) {
-                backTrack(nextRow, nextCol, remain);
+                backTrack(nextRow, nextCol, remain, grid);
             }
         }
         
