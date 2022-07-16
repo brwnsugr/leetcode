@@ -42,7 +42,7 @@ class Solution {
     private void backTrack(int currRow, int currCol, int remain, int[][] grid) {
         int currCell = grid[currRow][currCol];
 
-        if(currCell == 2 && remain == -1) {
+        if(currCell == 2 && remain == 0) {
             answer++;
             return;
         }
@@ -55,7 +55,8 @@ class Solution {
             if(nextRow >= 0 && nextRow < rows
               && nextCol >= 0 && nextCol < cols
               && grid[nextRow][nextCol] >= 0) {
-                backTrack(nextRow, nextCol, remain -1 , grid);
+                if(grid[nextRow][nextCol] == 2)backTrack(nextRow, nextCol, remain, grid);
+                else if(grid[nextRow][nextCol] == 0)backTrack(nextRow, nextCol, remain-1, grid);
             }
         }
         
