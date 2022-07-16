@@ -25,7 +25,7 @@ class Solution {
             for(int j = 0; j < cols; j++) {
                 int cell = grid[i][j];
                 
-                if(cell >= 0) emptyCells++;
+                if(cell == 0) emptyCells++;
                 if(cell == 1) {
                     startRow = i;
                     startCol = j;
@@ -42,13 +42,13 @@ class Solution {
     private void backTrack(int currRow, int currCol, int remain, int[][] grid) {
         int currCell = grid[currRow][currCol];
 
-        if(currCell == 2 && remain == 1) {
+        if(currCell == 2 && remain == -1) {
             answer++;
             return;
         }
         
         grid[currRow][currCol] = -4;
-        // remain--;
+
         for(int[] direction : DIRECTIONS) {
             int nextRow = currRow + direction[0];
             int nextCol = currCol + direction[1];
