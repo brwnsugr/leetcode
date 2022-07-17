@@ -1,32 +1,34 @@
 class Solution {
     public List<List<String>> groupAnagrams(String[] strs) {
-        // abca, aabc -> aabc
-        Map<String, List<String>> groupMap = new HashMap<>();
-        for(String str : strs) {
-            StringBuilder strBuilder = new StringBuilder();
-            int[] charCount = new int[26];
-            for(char c : str.toCharArray()) {
-                charCount[c-'a']++;
-            }
-            
-            for(int i = 0; i < charCount.length; i++) {
-                while(charCount[i] > 0) {
-                    strBuilder.append(i+'a');
-                    charCount[i]--;
-                }
-            }
-            String anagramKey = new String(strBuilder);
-            if(!groupMap.containsKey(anagramKey)) {
-                groupMap.put(anagramKey, new ArrayList<>());
-            }
-            groupMap.get(anagramKey).add(str);
+        List<List<String>> answers = new ArrayList<>();
+        Map<String, List<String>> anaMap = new HashMap<>();
+        
+        for(String word : strs) {
+            String key = makeKey(word);
+            if(!anaMap.containsKey(key)) anaMap.put(key, new ArrayList<>());
+            anaMap.get(key).add(word);
         }
         
-        List<List<String>> answers = new ArrayList<>();
-        for(Map.Entry<String, List<String>> entry : groupMap.entrySet()) {
-            answers.add(entry.getValue());
+        for(Map.Entry<String, List<String>> entry : anaMap.entrySet()) {
+            answers.add(entry.getValue()); 
         }
         
         return answers;
+    }
+    
+    
+    private String makeKey(String word) {
+        int[] counts = new int[26];
+        for(char c : word.toCharArray()) {
+            counts[c-'a']++;
+        }
+        StringBuilder strBuilder = new StringBuilder();
+        for(int i = 0; i < counts.length; i++) {
+            if(counts[i] > 0) {
+                char c = (char) (i + 'a');
+                strBuilder.append(c).append(counts[i]);
+            }
+        }
+        return new String(strBuilder);
     }
 }
