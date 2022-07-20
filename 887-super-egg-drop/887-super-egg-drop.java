@@ -11,7 +11,7 @@ class Solution {
             return cache.get(n*100 + k);
         }
         else if(n == 0) ans = 0;
-        // else if(n == 1) ans =  1;
+        else if(n == 1) ans =  1;
         else if(k == 1) ans = n;
         else {
             int lo = 1;
