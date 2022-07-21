@@ -1,34 +1,25 @@
 class Solution {
     
-    List<List<Integer>> answers = new ArrayList<>();
-    
+    private List<List<Integer>> answer = new ArrayList<>();
     public List<List<Integer>> subsets(int[] nums) {
-        /**
-        0개: 1, 1개: 3, 2개: 
-        */
-        List<Integer> res;
-        for(int i = 0; i <= nums.length; i++) {
-            res = new ArrayList<>();
-            recursive(0, nums, res, 0, i);
-        }
-        return answers;
+        generateSubsets(0, nums, new ArrayList<>());
+        return answer;
     }
-    
-    
-    private void recursive(int firstIdx, int[] nums, List<Integer> res, int currentCount, int target) {
-        
-        
-        if(currentCount == target) {
-            List<Integer> answer = new ArrayList<>(res);
-            answers.add(answer);
+    // [1,2]
+    // currIdx = 1, nums = [1,2], list = {1, 2}
+    private void generateSubsets(int currIdx, int[] nums, List<Integer> list) {
+        if(currIdx == nums.length) {
+            answer.add(new ArrayList<>(list));
             return;
         }
         
-        
-        for(int i = firstIdx; i < nums.length; i++) {
-            res.add(nums[i]);
-            recursive(i+1, nums, res, currentCount + 1, target);
-            res.remove(res.size()-1);
+        else {
+            list.add(nums[currIdx]);
+            generateSubsets(currIdx+1, nums, list);
+            list.remove(list.size() - 1);
+            generateSubsets(currIdx+1, nums, list);
         }
+        
+        
     }
 }
