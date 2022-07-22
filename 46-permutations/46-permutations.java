@@ -1,27 +1,27 @@
 class Solution {
-    
-    List<List<Integer>> answers = new ArrayList<>();
+    List<List<Integer>> answer = new ArrayList<>();
     public List<List<Integer>> permute(int[] nums) {
-        perm(0, nums.length, nums);
-        return answers;
+        recursion(nums, new HashSet<>(), new ArrayList<>());
+        return answer;
     }
     
-    private void perm(int start, int size, int[] nums) {
-        if(start == size - 1) {
-            List<Integer> listToAdd = new ArrayList<>();
-            for(int num : nums) listToAdd.add(num);
-            answers.add(listToAdd);
+    
+    private void recursion(int[] nums, Set<Integer> visited, List<Integer> tempList) {
+        if(visited.size() == nums.length) {
+            answer.add(new ArrayList<>(tempList));
             return;
         }
         
-        for(int idxSwap = start; idxSwap < size; idxSwap++) {
-            int temp = nums[idxSwap];
-            nums[idxSwap] = nums[start];
-            nums[start] = temp;
-            perm(start + 1, size, nums);
-            temp = nums[idxSwap];
-            nums[idxSwap] = nums[start];
-            nums[start] = temp;
+        else {
+            for(int i = 0; i < nums.length; i++) {
+                if(!visited.contains(nums[i])) {
+                    visited.add(nums[i]);
+                    tempList.add(nums[i]);
+                    recursion(nums, visited, tempList);
+                    visited.remove(nums[i]);
+                    tempList.remove(tempList.size() - 1);
+                }
+            }
         }
     }
 }
