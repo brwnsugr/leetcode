@@ -29,7 +29,6 @@ class Solution {
         
         if(row == N-1 && col == N-1) {
             solved = true;
-            return;
         }
         else {
             if(col == N-1) backTrack(row+1, 0);
