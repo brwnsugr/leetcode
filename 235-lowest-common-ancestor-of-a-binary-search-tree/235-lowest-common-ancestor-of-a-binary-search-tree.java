@@ -10,24 +10,21 @@
 
 class Solution {
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        // TreeNode root = root;
+        int parentVal = root.val;
         
-        while(root != null) {
-            int pVal = p.val;
-            int qVal = q.val;
-            
-            if(pVal < root.val && qVal < root.val) {
-                root = root.left;
-            }
-            else if(pVal > root.val && qVal > root.val) {
-                root = root.right;
-            }
-            else {
-                return root;
-            }
+        int pVal = p.val;
+        
+        int qVal = q.val;
+        
+        if(pVal < parentVal && qVal < parentVal) {
+            return lowestCommonAncestor(root.left, p, q);
         }
-        return null;
+        else if(pVal > parentVal && qVal > parentVal) {
+            return lowestCommonAncestor(root.right, p, q);
+        }
+        else {
+            return root;
+        }
+        
     }
-    
-    
 }
