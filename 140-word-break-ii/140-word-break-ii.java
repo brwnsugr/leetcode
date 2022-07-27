@@ -10,16 +10,16 @@ class Solution {
         HashSet<Character> stringCharSet = new HashSet<Character>();
         updateCharSet(s, stringCharSet);
 
-        HashSet<Character> wordCharSet = new HashSet<Character>();
+        // HashSet<Character> wordCharSet = new HashSet<Character>();
         wordSet = new HashSet<>();
         for (String word : wordDict) {
             wordSet.add(word);
-            updateCharSet(word, wordCharSet);
+            // updateCharSet(word, wordCharSet); 
         }
 
-        // quick check on the sets of characters
-        if (!wordCharSet.containsAll(stringCharSet))
-            return new ArrayList();
+//         // quick check on the sets of characters
+//         if (!wordCharSet.containsAll(stringCharSet))
+//             return new ArrayList();
 
         ArrayList<ArrayList<String>> dp = new ArrayList<ArrayList<String>>(s.length() + 1);
         for (int i = 0; i < s.length() + 1; ++i) {
