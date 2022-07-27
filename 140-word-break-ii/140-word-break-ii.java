@@ -6,7 +6,7 @@ class Solution {
             
         }
 
-        ArrayList<ArrayList<String>> dp = new ArrayList<ArrayList<String>>(s.length() + 1);
+        List<List<String>> dp = new ArrayList<>(s.length() + 1);
         for (int i = 0; i < s.length() + 1; ++i) {
             ArrayList<String> emptyList = new ArrayList<String>();
             dp.add(emptyList);
@@ -14,16 +14,20 @@ class Solution {
         dp.get(0).add("");
 
         for (int endIndex = 1; endIndex < s.length() + 1; ++endIndex) {
-            ArrayList<String> sublist = new ArrayList<String>();
-
-            // fill up the values in the dp array.
-            for (int startIndex = 0; startIndex < endIndex; ++startIndex) {
-                String word = s.substring(startIndex, endIndex);
-                if (wordSet.contains(word))
-                    for (String subsentence : dp.get(startIndex))
-                        sublist.add((subsentence + " " + word).strip());
+            List<String> subList = new ArrayList<>();
+            
+            for(int startIdx = 0; startIdx < endIndex; startIdx++) {
+                String word = s.substring(startIdx, endIndex);
+                
+                if(wordSet.contains(word)) {
+                    List<String> dpList = dp.get(startIdx);
+                    for(String subWord : dpList) {
+                        subList.add((subWord + " " + word).strip());
+                    }
+                    
+                }
             }
-            dp.set(endIndex, sublist);
+            dp.set(endIndex, subList);
         }
 
         return dp.get(s.length());
