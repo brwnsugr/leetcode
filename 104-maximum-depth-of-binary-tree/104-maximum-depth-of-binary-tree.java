@@ -18,22 +18,16 @@ class Solution {
     private int answer = 0;
 
     public int maxDepth(TreeNode root) {
-        if(root == null) return answer;
-        preOrder(root, 0);
-        return answer;
-    }
-    
-    private void preOrder(TreeNode node, int currHeight) {
-        if(node == null) {
-            answer = Math.max(answer, currHeight);
-            return;
-        }
+        if(root == null) return 0;
         
         else {
-            preOrder(node.left, currHeight + 1);
-            preOrder(node.right, currHeight + 1);
+            int leftHeight = maxDepth(root.left);
+            int rightHeight = maxDepth(root.right);
+            
+            return Math.max(leftHeight, rightHeight) + 1;
         }
     }
+    
     
     
     
