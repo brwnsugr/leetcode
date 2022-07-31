@@ -28,7 +28,6 @@ class Solution {
     }
     
     private void preOrder(TreeNode root, List<Integer> trace, int tempSum) {
-        if(root == null) return;
         if(root.left == null && root.right == null) {
             if(tempSum == target) {
                 answer.add(new ArrayList<>(trace));
