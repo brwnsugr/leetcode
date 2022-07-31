@@ -14,25 +14,29 @@
  * }
  */
 class Solution {
+    
+    private List<Integer> list = new ArrayList<>();
     public void flatten(TreeNode root) {
-        getFlattenedTail(root);
+        TreeNode curr = root;
+        
+        while(curr != null) {
+            
+            if(curr.left != null) {
+                TreeNode leftRight = curr.left;
+                while(leftRight.right != null) {
+                    leftRight = leftRight.right;
+                }
+                TreeNode rightSubtree = curr.right;
+                leftRight.right = rightSubtree;
+
+                curr.right = curr.left;
+                curr.left = null;
+            }
+
+            curr = curr.right;
+        }
+        
         
     }
     
-    private TreeNode getFlattenedTail(TreeNode root) {
-        if(root == null) return null;
-        if(root.right == null && root.left == null) return root;
-        
-        TreeNode leftTail = getFlattenedTail(root.left);
-        TreeNode rightTail = getFlattenedTail(root.right);
-        
-        if(leftTail != null) {
-            //append right node to leftTail
-            leftTail.right = root.right;
-            root.right = root.left; 
-            root.left = null;
-        }
-        
-        return rightTail == null ? leftTail : rightTail;
-    }
 }
