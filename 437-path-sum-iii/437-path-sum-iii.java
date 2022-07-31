@@ -14,30 +14,23 @@
  * }
  */
 class Solution {
-    private int count = 0;
-    private int target;
-    Map<Long, Integer> prefixSumMap = new HashMap<>();
+    
+    private int answerCount = 0;
+    private int target = 0;
     public int pathSum(TreeNode root, int targetSum) {
         target = targetSum;
-        preOrder(root, 0);
-        return count;
+        calculateFromRoot(root, 0);
+        
+        if(root != null && root.left != null) pathSum(root.left, targetSum);
+        if(root != null && root.right != null) pathSum(root.right, targetSum);
+        return answerCount;
     }
     
-    
-    private void preOrder(TreeNode root, long currSum) {
-        if(root == null) return;
-        
-        currSum += root.val;
-        
-        if(currSum == target) count++;
-        
-        count += prefixSumMap.getOrDefault(currSum - target, 0);
-        
-        prefixSumMap.put(currSum, prefixSumMap.getOrDefault(currSum, 0) + 1);
-        
-        preOrder(root.left, currSum);
-        preOrder(root.right, currSum);
-        
-        prefixSumMap.put(currSum, prefixSumMap.get(currSum) - 1);
+    private void calculateFromRoot(TreeNode curr, long sum) {
+        if(curr == null) return;
+        sum += curr.val;
+        if(sum == target) answerCount++;
+        calculateFromRoot(curr.left, sum);
+        calculateFromRoot(curr.right, sum);
     }
 }
