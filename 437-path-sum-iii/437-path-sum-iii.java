@@ -14,33 +14,30 @@
  * }
  */
 class Solution {
-    private LinkedList<Integer> cumulativePathSum = new LinkedList<>();
-    private Map<Integer, Integer> pathMap = new HashMap<>();
-    private int count;
+    private int count = 0;
     private int target;
-    
+    Map<Long, Integer> prefixSumMap = new HashMap<>();
     public int pathSum(TreeNode root, int targetSum) {
-        count = 0;
-        
-        this.target = targetSum;
-        dfs(root, 0);
+        target = targetSum;
+        preOrder(root, 0);
         return count;
     }
     
-    private void dfs(TreeNode root, int currSum) {
-        if(root == null) {
-            return;
-        }
-
-        currSum += root.val;
-        if(currSum == target) count++;
-        count += pathMap.getOrDefault(currSum - target, 0);
-        pathMap.put(currSum, pathMap.getOrDefault(currSum, 0) + 1);
-        dfs(root.left, currSum);
-        dfs(root.right, currSum);
-        pathMap.put(currSum, pathMap.get(currSum) - 1);
+    
+    private void preOrder(TreeNode root, long currSum) {
+        if(root == null) return;
         
+        currSum += root.val;
+        
+        if(currSum == target) count++;
+        
+        count += prefixSumMap.getOrDefault(currSum - target, 0);
+        
+        prefixSumMap.put(currSum, prefixSumMap.getOrDefault(currSum, 0) + 1);
+        
+        preOrder(root.left, currSum);
+        preOrder(root.right, currSum);
+        
+        prefixSumMap.put(currSum, prefixSumMap.get(currSum) - 1);
     }
-    
-    
 }
