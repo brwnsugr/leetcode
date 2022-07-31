@@ -26,9 +26,7 @@ class Solution {
                 while(leftRight.right != null) {
                     leftRight = leftRight.right;
                 }
-                TreeNode rightSubtree = curr.right;
-                leftRight.right = rightSubtree;
-
+                leftRight.right = curr.right;
                 curr.right = curr.left;
                 curr.left = null;
             }
