@@ -1,39 +1,21 @@
 class Solution {
-  public int longestConsecutive(int[] nums) {
-    Map<Integer, List<Integer>> adjMap = new HashMap<>();
-
-    Set<Integer> s = new HashSet<>();
-
-    for(int num : nums) {
-      s.add(num);
-      adjMap.put(num, new ArrayList<>());
+    public int longestConsecutive(int[] nums) {
+        // 1,2,3,4,6,7  ---  100,200     -> 
+        if(nums.length == 0) return 0;
+        int answer = 0;
+        Arrays.sort(nums);
+        
+        for(int i = 0; i < nums.length; i++) {
+            int curr = nums[i];
+            int tempLength = 1;
+            while(i+1 < nums.length && (curr + 1 == nums[i+1] || curr == nums[i+1])) {
+                if(curr+1 == nums[i+1]) tempLength++;
+                curr = nums[i+1];
+                i++;
+            }
+            answer = Math.max(answer, tempLength);
+        }
+        
+        return answer;
     }
-
-    for(int num : nums) {
-      /**
-       * check if its consecutive num exist
-       */
-      if(s.contains(num-1)) adjMap.get(num).add(num-1);
-      if(s.contains(num+1)) adjMap.get(num).add(num+1);
-    }
-
-    int answer = 0;
-    Set<Integer> visited = new HashSet<>();
-    for(int num : nums) {
-      if(!visited.contains(num))
-        answer = Math.max(answer, recursive(visited, adjMap, num));
-    }
-
-    return answer;
-  }
-
-  private int recursive(Set<Integer> visited, Map<Integer, List<Integer>> adjMap, int start) {
-    int res = 1;
-    visited.add(start);
-    List<Integer> adjList = adjMap.get(start);
-    for(int next : adjList) {
-      if(!visited.contains(next)) res += recursive(visited, adjMap, next);
-    }
-    return res;
-  }
 }
