@@ -1,12 +1,13 @@
 class Solution {
     
     private static final int N = 100001;
-    private boolean[] visited = new boolean[N+1];
-    private List<Integer>[] adjList = new ArrayList[N]; 
+    private boolean[] visited;
+    private List<Integer>[] adjList; 
     
     public String smallestStringWithSwaps(String s, List<List<Integer>> pairs) {
         
-        
+        visited = new boolean[s.length() + 1];
+        adjList = new ArrayList[s.length() + 1];
         //init adjList
         for(int i = 0; i < s.length(); i++) {
             adjList[i] = new ArrayList<>();
