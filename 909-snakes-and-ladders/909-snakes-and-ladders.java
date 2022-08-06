@@ -6,34 +6,36 @@ class Solution {
     
     public int snakesAndLadders(int[][] board) {
         int n = board.length;
-        moves = new int[n * n + 1];
-        Arrays.fill(moves, Integer.MAX_VALUE);        
-        moves[1] = 0;
-        dfs(1, board);
-        return moves[n*n] == Integer.MAX_VALUE ? -1 : moves[n*n];
-    }
-    
-    private void dfs(int curr, int[][] board) {
-        int n = board.length;
-        for(int i = 1; i <= 6; i++) {
-            int next = curr + i;
-            if(next > n*n) continue;    
-            int dest = getDest(next, board);
-            
-            if(dest == -1) {
-                if(moves[next] > moves[curr] + 1) {
-                    moves[next] = moves[curr] + 1;
-                    dfs(next, board);
-                }
-            }
-            else {
-                if(moves[dest] > moves[curr] + 1) {
-                    moves[dest] = moves[curr] + 1;
-                    dfs(dest, board);
-                }
-            }
-        }
+        Queue<Integer> q = new LinkedList<>();
+        boolean[] visited = new boolean[n * n + 1];
         
+        q.add(1);
+        visited[1] = true;
+        int steps = 0;
+        while(!q.isEmpty()) {
+            int qSize = q.size();
+            for(int i = 0; i < qSize; i++) {
+                int curr = q.poll();
+                if(curr == n * n) return steps;
+                for(int j = 1; j <= 6; j++) {
+                    int next = curr + j;
+                    if(next > n * n) continue;
+                    if(!visited[next]) {
+                        visited[next] = true;
+                        int dest = getDest(next, board);
+                        if(dest == -1) {
+                            q.add(next);
+                        }
+                        else {
+                            q.add(dest);
+                        }
+                        
+                    }
+                }
+            }
+            steps++;
+        }
+        return -1;
     }
     
     
