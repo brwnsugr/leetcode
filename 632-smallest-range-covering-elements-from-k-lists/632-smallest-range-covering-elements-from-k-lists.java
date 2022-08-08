@@ -14,28 +14,18 @@ class Solution {
         }
         
         while(hasElementToCheck) {
-            // for(int i = 0; i < nums.size(); i++) {
-                // for(int j = 0; j < nums.get(i).size(); j++) {
-                    Integer minIdx = pq.poll();
-            
-                    if( max - nums.get(minIdx).get(next[minIdx]) < right - left) {
-                        left = nums.get(minIdx).get(next[minIdx]);
-                        right = max;
-                    }
-
-                    next[minIdx]++;
-
-                    if(next[minIdx] == nums.get(minIdx).size()) {
-                        hasElementToCheck = false;
-                        break;
-                    }
-
-                    pq.add(minIdx);
-                    max = Math.max(max, nums.get(minIdx).get(next[minIdx]));
-                // }
-                
-            // }
-
+            Integer minIdx = pq.poll();
+            if( max - nums.get(minIdx).get(next[minIdx]) < right - left) {
+                left = nums.get(minIdx).get(next[minIdx]);
+                right = max;
+            }
+            next[minIdx]++;
+            if(next[minIdx] == nums.get(minIdx).size()) {
+                hasElementToCheck = false;
+                break;
+            }
+            pq.add(minIdx);
+            max = Math.max(max, nums.get(minIdx).get(next[minIdx]));
         }
         
         return new int[]{left, right};
