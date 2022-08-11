@@ -1,6 +1,7 @@
 class Solution {
     private List<List<int[]>> uniqueIslands = new ArrayList<>();
-    private List<int[]> currentIsland = new ArrayList<>();
+    // private List<int[]> currentIsland = new ArrayList<>();
+    private Set<Pair<Integer, Integer>> currentIsland;
     private int[][] grid;
     private boolean[][] visited;
     private static final int[][] DIRECTIONS = new int[][]{
@@ -12,43 +13,27 @@ class Solution {
     
     public int numDistinctIslands(int[][] grid) {
         
-        
+        Set<Set<Pair<Integer, Integer>>> islands = new HashSet<>();
         this.grid = grid;
         this.visited = new boolean[grid.length][grid[0].length];
         
         for(int row = 0; row < grid.length; row++) {
             for(int col = 0; col < grid[0].length; col++) {
-                dfs(row, col);
+                this.currentIsland = new HashSet<>();
+                dfs(row, col, row, col);
                 if(currentIsland.isEmpty()) continue;
-                
-                int minCol = grid[0].length - 1;
-                for(int i = 0; i < currentIsland.size(); i++) {
-                    minCol = Math.min(minCol, currentIsland.get(i)[1]);
-                }
-                
-                for(int[] cell : currentIsland) {
-                    cell[0] -= row;
-                    cell[1] -= minCol;
-                }
-                
-                if(currentIslandUnique()) {
-                    uniqueIslands.add(currentIsland);
-                }
-                currentIsland = new ArrayList<>();
+                if(!currentIsland.isEmpty()) islands.add(currentIsland);
             }
         }
-        // 1 
-        // 
-        //
-        return uniqueIslands.size();
+        return islands.size();
     }
     
     
-    private void dfs(int row, int col) {
+    private void dfs(int row, int col, int startRow, int startCol) {
         if(visited[row][col] || grid[row][col] == 0) return;
         
         visited[row][col] = true;
-        currentIsland.add(new int[]{row, col});
+        currentIsland.add(new Pair<>(row - startRow, col - startCol));
         
         for(int[] direction : DIRECTIONS) {
             int nextY = row + direction[0];
@@ -56,28 +41,10 @@ class Solution {
             if(nextY >= 0 && nextY < grid.length
               && nextX >= 0 && nextX < grid[0].length
               && !visited[nextY][nextX]) {
-                dfs(nextY, nextX);
+                dfs(nextY, nextX, startRow, startCol);
             }
         } 
     }
     
-    private boolean currentIslandUnique(){
-        for(List<int[]> otherIsland : uniqueIslands) {
-            if(currentIsland.size() != otherIsland.size()) continue;
-            if(equalIslands(currentIsland, otherIsland)) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    
-    private boolean equalIslands(List<int[]> island1, List<int[]> island2) {
-        for(int i = 0; i < island1.size(); i++) {
-            if(island1.get(i)[0] != island2.get(i)[0] || island1.get(i)[1] != island2.get(i)[1]) {
-                return false;
-            }
-        }
-        return true;
-    }
+
 }
