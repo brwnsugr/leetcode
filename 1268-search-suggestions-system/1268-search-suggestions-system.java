@@ -3,83 +3,104 @@ class Solution {
         Trie trie = new Trie();
         
         for(String product : products) trie.insert(product);
+        List<List<String>> answer = new ArrayList<>();
         
-        List<List<String>> answerList = new ArrayList<>();
         String prefix = "";
-        
         
         for(char c : searchWord.toCharArray()) {
             prefix += c;
-            List<String> res = trie.getWordStartingWith(prefix);
-            answerList.add(res);
+            List<String> res = new ArrayList<>();
+            res = trie.getWordListWithPrefix(prefix);
+            answer.add(res);
         }
-        
-        return answerList;
+        return answer;
     }
-    
-    
-    
 }
-
 
 class Trie {
     
-    public Node root;
-    
-    
-    class Node {
-        public boolean isWord;
-        public Node[] children;
-        
-        public Node(){
-            children = new Node[26];
+    class TrieNode {
+        TrieNode[] childs;
+        boolean isWord;
+        SortedSet<String> words = new TreeSet<>();
+        public TrieNode(){
+            childs = new TrieNode[26];
+            isWord = false;
         }
     }
     
+    TrieNode root;
     
     public Trie(){
-        root = new Node();
+        root = new TrieNode();
     }
     
-    public void insert(String word) {
-        Node curr = root;
+    public void insert(String input) {
         
-        for(char c : word.toCharArray()) {
-            if(curr.children[c - 'a'] == null) {
-                curr.children[c-'a'] = new Node();
+        TrieNode curr = root;
+        for(char c : input.toCharArray()) {
+            if(curr.childs[c-'a'] == null) {
+                curr.childs[c-'a'] = new TrieNode();
+                
             }
-            curr = curr.children[c-'a'];
+            curr = curr.childs[c-'a']; 
         }
-        
         curr.isWord = true;
     }
     
-    private void dfsWithPrefix(Node curr, List<String> res, String word) {
+    public List<String> getWordListWithPrefix(String prefix) {
+        List<String> res = new ArrayList<>();
+        TrieNode curr = root;
+        for(char c : prefix.toCharArray()) {
+            if(curr.childs[c-'a'] != null) {
+                curr = curr.childs[c-'a'];
+            }
+            else {
+                return res;
+            }
+        }
+
+        dfs(curr, prefix, res);
+        return res;
+    }
+    
+    private void dfs(TrieNode curr, String word, List<String> res) {
         if(res.size() == 3) return;
         if(curr.isWord) res.add(word);
         
         for(int i = 0; i < 26; i++) {
-            if(curr.children[i] != null) {
-                char c = (char)(i+'a');
-                dfsWithPrefix(curr.children[i], res, word + c);
+            if(curr.childs[i] != null) {
+                dfs(curr.childs[i], word + (char) (i + 'a'), res);
             }
         }
+        return;
     }
     
-    public List<String> getWordStartingWith(String prefix) {
+//     public List<List<String>> getWordList(String searchWord) {
+//         List<List<String>> res = new ArrayList<>();
+//         TrieNode curr = root;
+//         for(char c : searchWord.toCharArray()) {
+//             List<String> tmp = new ArrayList<>();
+//             if(curr.childs[c-'a'] == null) {
+//                 res.add(tmp); 
+//                 continue;
+//             }
+//             curr = curr.childs[c-'a'];
+            
+//             if(curr == null) res.add(tmp);
+//             else{
+//                 int cnt = 0;
+//                 for(String key : curr.words) {
+//                     tmp.add(key);
+//                     cnt++;
+//                     if(cnt == 3) break;
+//                 }
+//                 res.add(tmp);
+//             }
+//         }
         
-        Node curr = root;
-        List<String> res = new ArrayList<>();
-        
-        for(char c : prefix.toCharArray()) {
-            if(curr.children[c-'a'] == null) return res;
-            curr = curr.children[c-'a'];
-        }
-        
-        dfsWithPrefix(curr, res, prefix);
-        return res;
-    }
-    
-    
+//         return res;
+//     }
 }
+
 
