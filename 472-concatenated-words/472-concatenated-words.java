@@ -8,7 +8,6 @@ class Solution {
         
         for(String word : words) {
             if(isValid(word, wordDict)) answer.add(word);
-            cache = new HashSet<>();
         }
         
         return answer;
@@ -17,11 +16,12 @@ class Solution {
     
     private boolean isValid(String word, Set<String> wordDict) {
         if(cache.contains(word)) return true;
+        
         for(int i = 1; i < word.length(); i++) {
             String left = word.substring(0, i);
             String right = word.substring(i);
             if(wordDict.contains(left) && (wordDict.contains(right) || isValid(right, wordDict))) {
-                cache.add(right);
+                cache.add(word);
                 return true;
             }
         }
