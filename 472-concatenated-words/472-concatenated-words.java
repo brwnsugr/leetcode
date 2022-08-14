@@ -1,13 +1,13 @@
 class Solution {
-    
-    private Set<String> cache = new HashSet<>();
     public List<String> findAllConcatenatedWordsInADict(String[] words) {
+       
         Set<String> wordDict = new HashSet<>();
         List<String> answer = new ArrayList<>();
-        for(String word : words) wordDict.add(word);
-        
+        // for(String word : words) 
+        Arrays.sort(words, (a,b) -> a.length() - b.length());
         for(String word : words) {
             if(isValid(word, wordDict)) answer.add(word);
+            wordDict.add(word);
         }
         
         return answer;
@@ -15,16 +15,18 @@ class Solution {
     
     
     private boolean isValid(String word, Set<String> wordDict) {
-        if(cache.contains(word)) return true;
-        
-        for(int i = 1; i < word.length(); i++) {
-            String left = word.substring(0, i);
-            String right = word.substring(i);
-            if(wordDict.contains(left) && (wordDict.contains(right) || isValid(right, wordDict))) {
-                cache.add(word);
-                return true;
+        boolean[] dp = new boolean[word.length() + 1];
+        dp[0] = true;
+        int count = 0;
+        for(int i = 1; i <= word.length(); i++) {
+            for(int j = 0; j < i; j++) {
+                if(dp[j] && wordDict.contains(word.substring(j, i))) {
+                    count++;
+                    dp[i] = true;
+                }
             }
         }
-        return false;
+                   
+        return count > 1 ? dp[word.length()] : false;
     }
 }
