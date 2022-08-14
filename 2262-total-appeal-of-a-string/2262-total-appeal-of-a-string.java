@@ -1,9 +1,5 @@
 class Solution {
     public long appealSum(String s) {
-        // abc
-        // 1: a,b,c
-        // 2: ab, bc, 
-        // 3: abc
         long answer = 0;
         
         int[] lastIndices = new int[26];
