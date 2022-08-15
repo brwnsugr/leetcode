@@ -1,45 +1,41 @@
 class Solution {
     public int minMovesToMakePalindrome(String s) {
-        int moves = 0;
-        
-        char[] arr = s.toCharArray();
-        int l = 0;
-        int r = arr.length -1;
-        
-        while(l < r) {
-            int currPointer = r;
-            
-            if(arr[l] == arr[r]) {
-                l++;
-                r--;
-            }
-            else {
-                while(arr[l] != arr[currPointer]) {
-                   currPointer--; 
+        int answer = 0;
+        // abba
+        int left = 0;
+        int right = s.length() - 1;
+        char[] charArr = s.toCharArray();
+        while(left < right) {
+            int l = left; 
+            int r = right;
+            if(charArr[l] != charArr[r]) {
+                while(charArr[l] != charArr[r]) {
+                    r--;
                 }
-                
-                if(currPointer == l) {
-                    swap(arr, l, l+1);
-                    moves++;
+                if(l==r) { // element odd
+                    swap(r, r+1, charArr);
+                    answer++;
+                    continue;
                 }
-                
                 else {
-                    while(currPointer < r) {
-                        swap(arr, currPointer, currPointer+1);
-                        moves++;
-                        currPointer++;
+                    while(r < right) {
+                        swap(r, r+1, charArr);
+                        answer++;
+                        r++;
                     }
                 }
             }
+            
+            left++;
+            right--;
         }
         
-        
-        return moves;
+        return answer;
     }
     
-    private void swap(char[] arr, int start, int end){
-        char tmp = arr[start];
-        arr[start] = arr[end];
-        arr[end] = tmp;
+    private void swap(int i, int j, char[] arr) {
+        char tmp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = tmp;
     }
 }
