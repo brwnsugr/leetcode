@@ -1,50 +1,47 @@
-
-
 class MinStack {
     
-    List<Node> list;
-
+    private int minVal;
+    private Stack<Node> st;
     public MinStack() {
-        list = new LinkedList<>();
+        this.st = new Stack<>();
     }
     
     public void push(int val) {
-        if(list.size() == 0) {
-            list.add(new Node(val, val));
+        // st.add(val);
+        if(!st.isEmpty()) {
+            if(st.peek().minVal < val) {
+                st.add(new Node(val, st.peek().minVal));
+            } else {
+                st.add(new Node(val, val));
+            }
         }
         else {
-            Node prev = list.get(list.size()-1);
-            int minVal = Math.min(prev.minVal, val);
-            list.add(new Node(val, minVal));
+            st.add(new Node(val, val));
         }
-        
     }
     
-    public void pop() { //    S = ( (v: 10, m: 10), (v: ^4, m :4), (v: ^3, m: 3^)) -> 
-        list.remove(list.size()-1);
+    public void pop() {
+        st.pop();
     }
     
     public int top() {
-        Node ret = list.get(list.size()-1);
-        return ret.val;
+        return st.peek().val;
     }
     
     public int getMin() {
-        return list.get(list.size()-1).minVal;
-    }
-    
-    static class Node {
-        int val;
-        int minVal;
-        
-        public Node(int val, int minVal) {
-            this.val = val;
-            this.minVal = minVal;
-        }
+        return st.peek().minVal;
     }
 }
 
-
+class Node {
+    int minVal;
+    int val;
+    
+    public Node(int val, int minVal){
+        this.val = val;
+        this.minVal = minVal;
+    }
+}
 
 /**
  * Your MinStack object will be instantiated and called as such:
