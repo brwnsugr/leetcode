@@ -1,47 +1,54 @@
 class Solution {
     public String minWindow(String s, String t) {
-        Map<Character, Integer> tDict = new HashMap<>();
+        Map<Character, Integer> originCharMap = new HashMap<>();
         
         for(char c : t.toCharArray()) {
-            int count = tDict.getOrDefault(c, 0);
-            tDict.put(c, count+1);
+            if(!originCharMap.containsKey(c)) originCharMap.put(c, 0);
+            originCharMap.put(c, originCharMap.get(c) + 1);
         }
         
-        int formed = 0;
         
-        int requiredChars = tDict.size();
-        int[] ans = new int[]{-1,0,0};
-        
-        int l = 0;
+        Map<Character, Integer> windowMap = new HashMap<>();
         int r = 0;
+        int l = 0;
+        int[] windowBoundary = new int[]{0,0};
+        int minWidth = Integer.MAX_VALUE;
+        String res = "";
         
-        Map<Character, Integer> windowDict = new HashMap<>();
         while(r < s.length()) {
+            //
             char curr = s.charAt(r);
             
-            int count = windowDict.getOrDefault(curr, 0);
-            windowDict.put(curr, count + 1);
-            
-            if(tDict.containsKey(curr) && tDict.get(curr).intValue() == windowDict.get(curr).intValue()) {
-                formed++;
+            if(!windowMap.containsKey(curr)) windowMap.put(curr, 0);
+            windowMap.put(curr, windowMap.get(curr) + 1);
+            boolean isFormed = false;
+            while(l <= r && formed(originCharMap, windowMap)) {
+                char leftChar = s.charAt(l);
+                windowMap.put(leftChar, windowMap.get(leftChar) - 1);
+                l++;
+                isFormed = true;
             }
             
-            while(l <= r && requiredChars == formed) {
-                char leftChar = s.charAt(l);
-                if(ans[0] == -1 || r-l+1 < ans[0]) ans = new int[]{r-l+1, l, r};
-                
-                windowDict.put(leftChar, windowDict.get(leftChar) - 1);
-                
-                if(tDict.containsKey(leftChar) && tDict.get(leftChar).intValue() > windowDict.get(leftChar).intValue()) {
-                    formed--;
-                }
-                
-                l++;
+            if(isFormed && r - l < minWidth) {
+                minWidth = r - l;
+                res = s.substring(l - 1, r + 1);
             }
             
             r++;
         }
-        return ans[0] == -1 ? "" : s.substring(ans[1], ans[2]+1);
+        
+        
+        
+        return res; 
+    }
     
+    
+    private boolean formed(Map<Character, Integer> originMap, Map<Character, Integer> windowMap ) {
+        for(Map.Entry<Character, Integer> entry : originMap.entrySet()) {
+            if(!windowMap.containsKey(entry.getKey()) || windowMap.get(entry.getKey()) < entry.getValue()) {
+                return false;
+            }
+        }
+        return true;
     }
 }
