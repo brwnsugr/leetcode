@@ -1,45 +1,28 @@
 class Solution {
-    private ArrayDeque<Integer> deq = new ArrayDeque<>();
-    private int[] nums;
-    
     public int[] maxSlidingWindow(int[] nums, int k) {
-        int n = nums.length;
-        int[] answer = new int[n-k+1];
-        if (n * k == 0) return new int[0];
-        if (k == 1) return nums;
-        
-        this.nums = nums;
-        int maxIdx = 0;
-        
+        Deque<Integer> deque = new ArrayDeque<>();
+        int ans[] = new int[nums.length - k + 1];
         for(int i = 0; i < k; i++) {
-            while (!deq.isEmpty() && nums[i] > nums[deq.getLast()]) {
-                deq.removeLast();
+            while(!deque.isEmpty() && nums[deque.getLast()] < nums[i]) {
+                deque.removeLast();
             }
-            if(nums[i] > nums[maxIdx]) maxIdx = i;
-            deq.addLast(i);
+            deque.addLast(i);
+        }
+        int idx = 0;
+        ans[idx++] = nums[deque.getFirst()];
+        
+        for(int i = k; i < nums.length; i++) {
+            if(deque.getFirst() <= i - k ) deque.removeFirst();
+            
+            while(!deque.isEmpty() && nums[deque.getLast()] < nums[i]) {
+                deque.removeLast();
+            }
+            
+            deque.addLast(i);
+            ans[idx] = nums[deque.getFirst()];
+            idx++;
         }
         
-        answer[0] = nums[maxIdx];
-        
-        for(int i = k; i < n; i++) {
-            adjustWindow(i, k);
-            deq.addLast(i);
-            answer[i - k + 1] = nums[deq.getFirst()];
-        }
-        
-        return answer; 
+        return ans;
     }
-    
-    
-    private void adjustWindow(int currIdx, int k) {
-        if(!deq.isEmpty() && deq.getFirst() == currIdx - k) {
-            deq.removeFirst();
-        }
-        
-        while(!deq.isEmpty() && nums[currIdx] > nums[deq.getLast()]) {
-            deq.removeLast();
-        }
-    }
-    
-    
 }
