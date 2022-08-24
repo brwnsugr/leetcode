@@ -14,25 +14,15 @@
  * }
  */
 class Solution {
-    
-    // private Integer lowerBound = Integer.MIN_VALUE;
-    // private int upperBound = Integer.MAX_VALUE;
-    
     public boolean isValidBST(TreeNode root) {
         return isValid(root, null, null);
     }
     
-    private boolean isValid(TreeNode root, Integer lower, Integer upper) {
-        if(root == null) return true;
-        else if((lower != null && root.val <= lower) 
-                || (upper != null && root.val >= upper)) {
-            return false; 
-        } 
-        else{
-            boolean isLeftValid = isValid(root.left, lower, root.val);
-            boolean isRightValid = isValid(root.right, root.val, upper);
-            return isLeftValid && isRightValid;
-        }
+    private boolean isValid(TreeNode curr, Integer min, Integer max) {
+        if(curr == null) return true;
         
+        if((min != null && min >= curr.val) || (max != null && max <= curr.val)) return false;
+        
+        return isValid(curr.left, min, curr.val) && isValid(curr.right, curr.val, max);
     }
 }
