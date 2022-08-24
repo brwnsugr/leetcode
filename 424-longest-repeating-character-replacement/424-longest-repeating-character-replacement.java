@@ -4,28 +4,22 @@ class Solution {
         int r = 0;
         int[] charCounts = new int[26];
         int answer = 1;
-        //  ^ -> requiredCount = windowLen - largestMaxCount
-        // Z(SA)AAB
         while(r < s.length()) {
             char currChar = s.charAt(r);
-            charCounts[currChar - 'A']++;
-            
-            while(getRequiredRepCount(charCounts, l, r) > k) {
+            charCounts[currChar - 'A']++;            
+            while(getRequiredRepCount(charCounts) > k) {
                 char leftChar = s.charAt(l);
                 charCounts[leftChar -'A']--;
                 l++;
             }
-            
             answer = Math.max(r - l + 1, answer);
             r++;
         }
-        
-        
         return answer;
     }
     
     
-    private int getRequiredRepCount(int[] charCounts, int start, int end) {
+    private int getRequiredRepCount(int[] charCounts) {
         int totalCnts = 0;
         int maxCharCount = 0;
         
