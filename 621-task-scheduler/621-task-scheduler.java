@@ -1,25 +1,40 @@
 class Solution {
     public int leastInterval(char[] tasks, int n) {
-        
+        // t = 0
+        // n = 2
+        // pq = (A: 4), B: 3, 
+        // q = A: 2, B: 3, 
+        // pq = (4, 3)
         //
-        // ABi
-        // A: 2, B;1, n = 1
-        // f_max = 3
-        // (3 - 1) * 
-        // A
-        // 
-        int[] freq = new int[28];
+        // pq = 3, 3 t = 3
+        // q = [(3,4), (2,5), ]
+        int timeElapsed = 0;
         
-        for(char task : tasks) freq[task-'A']++;
+        PriorityQueue<Integer> pq = new PriorityQueue<>((a,b) -> b-a);
+        Queue<Pair<Integer, Integer>> q = new LinkedList<>();
         
-        Arrays.sort(freq);
-        int maxFreq = freq[27];
-        int idleSlots = (maxFreq - 1) * n;
-        for(int i = 26; i >= 0; i--) {
-            idleSlots -= Math.min(maxFreq-1, freq[i]);
-            if(idleSlots < 0 || freq[i] == 0) break;
+        
+        int[] counts = new int[26];
+        for(char task : tasks) counts[task - 'A']++;
+        
+        for(int count : counts) {
+            if(count > 0) pq.add(count);
         }
-        idleSlots = Math.max(0, idleSlots);
-        return tasks.length + idleSlots;
+        
+        while(!pq.isEmpty() || !q.isEmpty()) {
+            timeElapsed++;
+            
+            if(!pq.isEmpty()) {
+                int val = pq.poll();
+                val--;
+                if(val > 0) q.add(new Pair<Integer, Integer>(val, timeElapsed + n));
+            }
+            
+            if(!q.isEmpty() && q.peek().getValue() == timeElapsed) {
+                pq.add(q.poll().getKey());
+            }
+        }
+        
+        return timeElapsed;
     }
 }
