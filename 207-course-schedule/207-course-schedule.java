@@ -2,7 +2,7 @@ class Solution {
     public boolean canFinish(int numCourses, int[][] prerequisites) {
         int[] inDegree = new int[numCourses];
         List<List<Integer>> outBounds = new ArrayList<>();
-        List<Integer> orders = new ArrayList<>();
+        Set<Integer> orders = new HashSet<>();
         for(int i = 0; i < numCourses; i++) outBounds.add(new ArrayList<>());
         
         for(int[] prerequisite : prerequisites){
