@@ -1,47 +1,38 @@
 class Solution {
-    
-    private List<List<Integer>> answers = new ArrayList<>();
-    
     public List<List<Integer>> threeSum(int[] nums) {
-        
-        //try all the comb of nums and check if it equqls target
+        //[1^,1,1,1] , target = 3
+        List<List<Integer>> res = new ArrayList<>();
         Arrays.sort(nums);
         
         for(int i = 0; i < nums.length - 2; i++) {
-            if(i != 0 && nums[i] == nums[i-1]) continue;
-            int semiTarget = -nums[i];
-            appendTriplets(semiTarget, i + 1, nums);
+            if(i > 0 && nums[i] == nums[i-1]) continue;
+            int start = nums[i];
+            
+            int semiTarget = start * (-1);
+            
+            int l = i + 1;
+            
+            int r = nums.length - 1;
+            
+            while(l < r) {
+                int remainSum = nums[l] + nums[r];
+                if(remainSum == semiTarget) {
+                    res.add(Arrays.asList(start, nums[l], nums[r]));
+                    l++;
+                }
+                else if(remainSum < semiTarget) {
+                    l++;
+                }
+                else {
+                    r--;
+                }
+                
+                while(l > i + 1 && l < r && nums[l] == nums[l-1]) {
+                    l++;
+                }
+            }
         }
         
-        return answers;
+        return res;
     }
-    
-    private void appendTriplets(int semiTarget, int start, int[] nums) {
-        int end = nums.length - 1;
-        
-        
-        while(start < end) {
-            int startVal = nums[start];
-            int endVal = nums[end];
-            
-            if(startVal + endVal < semiTarget) {
-                start++;
-            }
-            
-            else if(startVal + endVal > semiTarget) {
-                end--;
-            }
-            
-            else {
-                answers.add(Arrays.asList(-semiTarget, nums[start++], nums[end--]));
-                while(start < end && nums[start] == nums[start-1]) start++;
-            }
-            
-        }        
-        
-        return;
-    }
-    
-    
-    
 }
