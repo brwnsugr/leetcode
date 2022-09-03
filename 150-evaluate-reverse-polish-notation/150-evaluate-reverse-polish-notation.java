@@ -1,35 +1,32 @@
 class Solution {
     public int evalRPN(String[] tokens) {
-        Stack<String> st = new Stack<>();
+        if(tokens.length == 1) return Integer.valueOf(tokens[0]);
+        Stack<Integer> st = new Stack<>();
         
         for(String token : tokens) {
-            st.add(token);
-            if(!isDigit(st.peek())) {
-                String op = st.pop();
-                int second = Integer.parseInt(st.pop());
-                int first = Integer.parseInt(st.pop());
-                if(op.equals("+")) {
-                    st.add(String.valueOf(first + second));
+            if(token.matches("[+-]?[0-9]+")) {
+                st.add(Integer.valueOf(token));
+            }
+            else {
+                int lastNum = Integer.valueOf(st.pop());
+                // int firstNum = Integer.valueOf(st.pop());
+                int newNum = 0;
+                if(token.equals("+")) {
+                    newNum = st.peek() + lastNum;
                 }
-                else if(op.equals("-")) {
-                    st.add(String.valueOf(first-second));
+                else if(token.equals("-")) {
+                    newNum = st.peek() - lastNum;
                 }
-                else if(op.equals("/")) {
-                    st.add(String.valueOf(first / second));
+                else if(token.equals("*")) {
+                    newNum = st.peek() * lastNum;
                 }
-                else {
-                    st.add(String.valueOf(first * second));
+                else if(token.equals("/")) {
+                    newNum = st.peek() / lastNum;
                 }
+                st.pop();
+                st.add(newNum);
             }
         }
-        
-        return Integer.parseInt(st.pop());
-    }
-    
-    
-    private boolean isDigit(String s) {
-        if(s.length() > 1) return true;
-        char c = s.charAt(0);
-        return Character.isDigit(c);
+        return st.peek();
     }
 }
