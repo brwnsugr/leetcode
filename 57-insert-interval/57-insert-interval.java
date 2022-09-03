@@ -1,34 +1,25 @@
 class Solution {
     public int[][] insert(int[][] intervals, int[] newInterval) {
-        
-        List<int[]> insertedIntervals = new ArrayList<>();
-        int newStart = newInterval[0];
-        int newEnd = newInterval[1];
-        
-        //leftMost
-        
-        int idx = 0;
-        int len = intervals.length;
-        
-        while(idx < len && intervals[idx][1] < newStart) {
-            insertedIntervals.add(new int[]{intervals[idx][0], intervals[idx][1]});
-            idx++;
+        List<int[]> newIntervals = new ArrayList<>();
+        for(int[] interval : intervals) {
+            if(newInterval == null || interval[1] < newInterval[0]) {
+                newIntervals.add(interval);
+            }
+            else if(newInterval[1] < interval[0]) {
+                newIntervals.add(newInterval);
+                newIntervals.add(interval);
+                newInterval = null;
+            }
+            else {
+                newInterval[0] = Math.min(newInterval[0], interval[0]);
+                newInterval[1] = Math.max(newInterval[1], interval[1]);
+            }
         }
         
-        //merge
-        while(idx < len && intervals[idx][0] <= newEnd) {
-            newStart = Math.min(intervals[idx][0], newStart);
-            newEnd = Math.max(intervals[idx][1], newEnd);
-            idx++;
-        }
-        insertedIntervals.add(new int[]{newStart, newEnd});
+        if(newInterval != null) newIntervals.add(newInterval); 
+        //
+        return newIntervals.toArray(new int[newIntervals.size()][]);
+        //
         
-        //rightmost
-        while(idx < len) {
-            insertedIntervals.add(new int[]{intervals[idx][0], intervals[idx][1]});
-            idx++;
-        }
-        
-        return insertedIntervals.toArray(new int[0][0]);
     }
 }
