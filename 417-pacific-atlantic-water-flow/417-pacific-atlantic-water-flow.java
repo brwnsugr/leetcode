@@ -1,65 +1,72 @@
 class Solution {
-  private final List<int[]> DIRECTIONS = Arrays.asList(
-      new int[]{0,1},
-      new int[]{1,0},
-      new int[]{-1,0},
-      new int[]{0,-1}
-  );
-
-  public List<List<Integer>> pacificAtlantic(int[][] heights) {
-    /**
-     * We separate Two Starting border parts, by both Oceans.
-     * first part is left and top side border, and Second part is right and bottom side border
-     *
-     * from that borders, we traverse from each points of border and check any point is reacheable to ocean or not
-     * so, any points which are reacheable to both ocean would be one of the answer list.
-     */
-    List<List<Integer>> res = new ArrayList<>();
-
-    int rows = heights.length;
-    int cols = heights[0].length;
     
-    Queue<int[]> pacificQueue = new LinkedList<>();
-    Queue<int[]> atlanticQueue = new LinkedList<>();
-    for(int i = 0; i < rows; i++) {
-      pacificQueue.add(new int[]{i, 0});
-      atlanticQueue.add(new int[]{i, cols-1});
-    }
-
-    for(int i = 0; i < cols; i++) {
-      pacificQueue.add(new int[]{0,i});
-      atlanticQueue.add(new int[]{rows-1, i});
-    }
-
-    boolean[][] pacificFlow = bfs(heights, pacificQueue, rows, cols);
-    boolean[][] atlanticFlow = bfs(heights, atlanticQueue, rows, cols);
-
-    for(int i = 0; i < rows; i++) {
-      for(int j = 0; j < cols; j++) {
-        if(pacificFlow[i][j] && atlanticFlow[i][j]) {
-          res.add(Arrays.asList(i, j));
+    private static final int[][] DIRECTIONS = new int[][]{
+        {0,1},
+        {1,0},
+        {-1,0},
+        {0,-1}
+    };
+    
+    private int numRows;
+    private int numCols;
+    private int[][] landHeights;
+    
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        numRows = heights.length;
+        numCols = heights[0].length;
+        if(numRows == 0 || numCols == 0) return new ArrayList<>();
+        landHeights = heights;
+        
+        Queue<int[]> pacificQueue = new LinkedList<>();
+        Queue<int[]> atlanticQueue = new LinkedList<>();
+        
+        //init pacific queue
+        for(int col = 0; col < numCols; col++) {
+            pacificQueue.add(new int[]{0, col});
+            atlanticQueue.add(new int[]{numRows - 1, col});
         }
-      }
-    }
-    return res;
-  }
-
-  private boolean[][] bfs(int[][] heights, Queue<int[]> q, int rows, int cols) {
-    boolean[][] reacheable = new boolean[rows][cols];
-    while(!q.isEmpty()) {
-      int[] curr = q.poll();
-      reacheable[curr[0]][curr[1]] = true;
-      for(int[] direction : DIRECTIONS) {
-        int nextR = curr[0] + direction[0];
-        int nextC = curr[1] + direction[1];
-        if(nextR >= 0 && nextR < rows
-            && nextC >= 0 && nextC < cols
-            && !reacheable[nextR][nextC]
-            && heights[nextR][nextC] >= heights[curr[0]][curr[1]]) {
-          q.add(new int[]{nextR, nextC});
+        
+        //init atlantic queue
+        for(int row = 0; row < numRows; row++) {
+            pacificQueue.add(new int[]{row, 0});
+            atlanticQueue.add(new int[]{row, numCols - 1});
         }
-      }
+        
+        boolean[][] pacificReached = bfs(pacificQueue);
+        boolean[][] atlanticReached = bfs(atlanticQueue);
+        
+        List<List<Integer>> res = new ArrayList<>();
+        for(int row = 0; row < numRows; row++) {
+            for(int col = 0; col < numCols; col++) {
+                if(pacificReached[row][col] && atlanticReached[row][col]) {
+                    res.add(Arrays.asList(row, col));
+                }
+            }
+        }
+        
+        return res;
     }
-    return reacheable;
-  }
+    
+    private boolean[][] bfs(Queue<int[]> q) {
+        boolean[][] visited = new boolean[numRows][numCols];
+        
+        while(!q.isEmpty()) {
+            int[] curr = q.poll();
+            
+            visited[curr[0]][curr[1]] = true;
+            
+            for(int[] direction : DIRECTIONS) {
+                int nextY = curr[0] + direction[0];
+                int nextX = curr[1] + direction[1];
+                
+                if(nextY >= 0 && nextY < numRows
+                  && nextX >= 0 && nextX < numCols
+                  && !visited[nextY][nextX]
+                  && landHeights[nextY][nextX] >= landHeights[curr[0]][curr[1]]) {
+                    q.add(new int[]{nextY, nextX});
+                }
+            }
+        }
+        return visited;
+    }
 }
