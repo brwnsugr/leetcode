@@ -1,33 +1,27 @@
 class Solution {
     public int eraseOverlapIntervals(int[][] intervals) {
+        // [1,2], [1,3] [2,3]
+        // 
+        // (   )
+        //(  ) //
+        Stack<int[]> st = new Stack<>();
+        
         Arrays.sort(intervals, (a,b) -> a[0] - b[0]);
         
-        int[] prevInterval = intervals[0];
-        int eraseCount = 0;
-        
-        for(int i = 1; i < intervals.length; i++) {
-            if(isOverlapping(prevInterval, intervals[i])) {
-                int currEnd = intervals[i][1];
-                int prevEnd = prevInterval[1];
-                
-                if(prevEnd >= currEnd) {
-                    prevInterval = intervals[i];
+        for(int[] interval : intervals) {
+            int currStart = interval[0];
+            int currEnd = interval[1];
+            if(!st.isEmpty() && st.peek()[1] > currStart) {
+                if(currEnd < st.peek()[1]) {
+                    st.pop();
+                    st.add(new int[]{currStart, currEnd});
                 }
-                eraseCount++;
             }
             else {
-                prevInterval = intervals[i];
+                st.add(new int[]{currStart, currEnd});
             }
         }
         
-        
-        
-        
-        return eraseCount;
-    }
-    
-    
-    private boolean isOverlapping(int[] a, int[] b) {
-        return a[0] < b[1] && a[1] > b[0];
+        return intervals.length - st.size();
     }
 }
