@@ -16,29 +16,26 @@ class Solution {
         numCols = heights[0].length;
         if(numRows == 0 || numCols == 0) return new ArrayList<>();
         landHeights = heights;
-        
-        Queue<int[]> pacificQueue = new LinkedList<>();
-        Queue<int[]> atlanticQueue = new LinkedList<>();
+        boolean[][] pacificVisited = new boolean[numRows][numCols];
+        boolean[][] atlanticVisited = new boolean[numRows][numCols];
         
         //init pacific queue
         for(int col = 0; col < numCols; col++) {
-            pacificQueue.add(new int[]{0, col});
-            atlanticQueue.add(new int[]{numRows - 1, col});
+            dfs(0, col, pacificVisited);
+            dfs(numRows - 1, col, atlanticVisited);
         }
         
         //init atlantic queue
         for(int row = 0; row < numRows; row++) {
-            pacificQueue.add(new int[]{row, 0});
-            atlanticQueue.add(new int[]{row, numCols - 1});
+            dfs(row, 0, pacificVisited);
+            dfs(row, numCols - 1, atlanticVisited);
         }
         
-        boolean[][] pacificReached = bfs(pacificQueue);
-        boolean[][] atlanticReached = bfs(atlanticQueue);
-        
+
         List<List<Integer>> res = new ArrayList<>();
         for(int row = 0; row < numRows; row++) {
             for(int col = 0; col < numCols; col++) {
-                if(pacificReached[row][col] && atlanticReached[row][col]) {
+                if(pacificVisited[row][col] && atlanticVisited[row][col]) {
                     res.add(Arrays.asList(row, col));
                 }
             }
@@ -47,26 +44,19 @@ class Solution {
         return res;
     }
     
-    private boolean[][] bfs(Queue<int[]> q) {
-        boolean[][] visited = new boolean[numRows][numCols];
+    private void dfs(int currRow, int currCol, boolean[][] visited) {
+        if(visited[currRow][currCol]) return;
+        visited[currRow][currCol] = true;
         
-        while(!q.isEmpty()) {
-            int[] curr = q.poll();
-            
-            visited[curr[0]][curr[1]] = true;
-            
-            for(int[] direction : DIRECTIONS) {
-                int nextY = curr[0] + direction[0];
-                int nextX = curr[1] + direction[1];
-                
-                if(nextY >= 0 && nextY < numRows
-                  && nextX >= 0 && nextX < numCols
-                  && !visited[nextY][nextX]
-                  && landHeights[nextY][nextX] >= landHeights[curr[0]][curr[1]]) {
-                    q.add(new int[]{nextY, nextX});
-                }
+        for(int[] direction : DIRECTIONS) {
+            int nextY = currRow + direction[0];
+            int nextX = currCol + direction[1];
+            if(nextY >= 0 && nextY < numRows
+              && nextX >= 0 && nextX < numCols
+              && !visited[nextY][nextX]
+              && landHeights[nextY][nextX] >= landHeights[currRow][currCol]) {
+                dfs(nextY, nextX, visited);
             }
         }
-        return visited;
     }
 }
