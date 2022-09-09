@@ -1,56 +1,57 @@
 class WordDictionary {
-    TrieNode root;
+    
+    private Node root;
+
     public WordDictionary() {
-        root = new TrieNode();
+        root = new Node();
     }
     
     public void addWord(String word) {
-        TrieNode curr = root;
-        for(int i = 0; i < word.length(); i++) {
-            char c = word.charAt(i);
-            if(curr.next[c-'a'] == null) {
-                curr.next[c-'a'] = new TrieNode();
-            }
-            curr = curr.next[c-'a'];
+        char[] charArr = word.toCharArray();
+        Node curr = root;
+        for(char c : charArr) {
+            if(curr.children[c-'a'] == null) curr.children[c-'a'] = new Node();
+            curr = curr.children[c-'a'];
         }
-        curr.isEnd = true;
+        curr.isWord = true;
     }
     
     public boolean search(String word) {
-        TrieNode curr = root;
-        return dfs(curr, word, 0);
+        Node curr = root;
+        return dfs(curr, 0, word);
     }
     
-    private boolean dfs(TrieNode curr, String word, int i) {
-        if(i == word.length()) {
-            return curr.isEnd;
-        }
-        else {
-            if(word.charAt(i) == '.'){
-                for(int j = 0; j < 26; j++) {
-                    if(curr.next[j] != null) {
-                        if(dfs(curr.next[j], word, i+1)) 
-                            return true;
+    private boolean dfs(Node curr, int idx, String word) {
+        for(int i = idx; i < word.length(); i++) {
+            char currCh = word.charAt(i);
+            
+            if(currCh == '.') {
+                for(Node node : curr.children) {
+                    if(node != null && dfs(node, i+1, word)) {
+                        return true;
                     }
                 }
-                return false;
-            } else {
-                if(curr.next[word.charAt(i)-'a'] != null) {
-                    return dfs(curr.next[word.charAt(i)-'a'], word, i+1);
-                }
+                
                 return false;
             }
+            
+            if(curr.children[currCh-'a'] == null) return false;
+            
+            curr = curr.children[currCh -'a'];
+            
         }
+        
+        return curr.isWord;
     }
 }
 
-class TrieNode{
-    public TrieNode[] next;
-    public boolean isEnd;
+class Node {
+    Node[] children;
+    boolean isWord;
     
-    public TrieNode(){
-        this.next = new TrieNode[26];
-        this.isEnd = false;
+    public Node() {
+        children = new Node[26];
+        isWord = false;
     }
 }
 
