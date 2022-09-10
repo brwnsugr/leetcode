@@ -25,24 +25,18 @@ class Solution {
     private boolean feasible(int[] bloomDay, int days, int threshold, int k) {
         
         int len = bloomDay.length;
-        boolean[] gardens = new boolean[len];
-        int count = 0;
-        for(int i = 0; i < len; i++) {
-            if(bloomDay[i] <= days) gardens[i] = true;
-        }
-        
-        int i = 0;
-        while(i < len) {
-            int formed = 0;
-            boolean form = false;
-            while(i < len && formed < k && gardens[i]) {
-                formed++;
-                i++;
-                form = true;
+        int flowers = 0;
+        int bouquets = 0;
+        for(int bloom : bloomDay) {
+            if(days < bloom) {
+                flowers = 0;
             }
-            if(formed == k) count++;
-            if(count >= threshold) return true;
-            if(!form) i++;
+            else {
+                bouquets += (flowers + 1) / k;
+                flowers = (flowers + 1) % k;
+                if(bouquets >= threshold) return true;
+            }
+            
         }
         return false;
     }
