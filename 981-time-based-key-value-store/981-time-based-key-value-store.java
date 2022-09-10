@@ -17,7 +17,6 @@ class TimeMap {
         return search(pairs, timestamp);
     }
     
-    
     private String search(List<Pair<String, Integer>> list, int timestamp) {
         int left = 0;
         int right = list.size() - 1;
@@ -25,7 +24,7 @@ class TimeMap {
         while(left < right) {
             int mid = left + (right - left + 1) / 2;
             
-            if(timestamp >= list.get(mid).getValue()) {
+            if(timestamp >= list.get(mid).getValue().intValue()) {
                 left = mid;
             }
             else {
@@ -33,11 +32,15 @@ class TimeMap {
             }
         }
         
-        // if(timestamp < list.get(left).getValue()) return list.get(left).getKey();
-        return list.get(left).getValue() <= timestamp ? list.get(left).getKey() : "";
+        return list.get(left).getValue().intValue() <= timestamp ? list.get(left).getKey() : "";
     }
     
-    
+    // love -> (high, 10), (low, 20)
+    // get, love, 5
+    // get, love, 10 (high)
+    // get, love, 15 (high)
+    // get, love, 20 (low)
+    // get, love, 20(low)
 }
 
 /**
