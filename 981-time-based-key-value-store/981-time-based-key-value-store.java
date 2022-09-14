@@ -3,7 +3,6 @@ class TimeMap {
     Map<String, List<Pair<String, Integer>>> map;
 
     public TimeMap() {
-        System.out.println("start ");
         map = new HashMap<>();
     }
     
