@@ -9,36 +9,37 @@ class TimeMap {
     public void set(String key, String value, int timestamp) {
         if(!map.containsKey(key)) map.put(key, new ArrayList<>());
         map.get(key).add(new Pair(value, timestamp));
+        
     }
     
     public String get(String key, int timestamp) {
         if(!map.containsKey(key)) return "";
-        List<Pair<String, Integer>> pairs = map.get(key);
-        return search(pairs, timestamp);
+        return search(map.get(key), timestamp);
     }
     
-    private String search(List<Pair<String, Integer>> list, int timestamp) {
+    
+    private String search(List<Pair<String,Integer>> list, int timestamp) {
         int left = 0;
-        int right = list.size();
+        int right = list.size() - 1;
         
         while(left < right) {
             int mid = left + (right - left) / 2;
-            // if(timestamp == list.get(mid).getValue()) {
-            //     left = mid;
-            //     break;
-            // }
-            if(timestamp >= list.get(mid).getValue().intValue()) {
-                left = mid + 1;
+            if(list.get(mid).getValue() == timestamp) {
+                left = mid;
+                break;
+            }
+            if(list.get(mid).getValue() > timestamp) {
+                right = mid;
             }
             else {
-                right = mid;
+                left = mid + 1;
             }
         }
         
-        if(right == 0) return "";
-        return list.get(right - 1).getKey();
+        if(left == 0 && timestamp < list.get(left).getValue()) return "";
+        if(timestamp < list.get(left).getValue()) return list.get(left - 1).getKey();
+        return list.get(left).getKey();
     }
-    
 }
 
 /**
