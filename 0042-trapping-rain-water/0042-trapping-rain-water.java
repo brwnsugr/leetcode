@@ -14,6 +14,7 @@ class Solution {
                 if(st.isEmpty()) break;
                 int tempWidth = r - st.peek() - 1;
                 int tempHeight = Math.min(height[st.peek()], currHeight) - bottom;
+                if(tempHeight == 0) continue;
                 answer += tempWidth * tempHeight;
             }
             st.add(r);
